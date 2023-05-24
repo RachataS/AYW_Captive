@@ -2,13 +2,8 @@
   <!--begin::Wrapper-->
   <div class="w-lg-500px p-10">
     <!--begin::Form-->
-    <VForm
-      class="form w-100"
-      id="kt_login_signin_form"
-      @submit="onSubmitLogin"
-      :validation-schema="login"
-      :initial-values="{ email: 'admin@demo.com', password: 'demo' }"
-    >
+    <VForm class="form w-100" id="kt_login_signin_form" @submit="onSubmitLogin" :validation-schema="login"
+      :initial-values="{ email: '', password: '' }">
       <!--begin::Heading-->
       <div class="text-center mb-10">
         <!--begin::Title-->
@@ -41,13 +36,8 @@
         <!--end::Label-->
 
         <!--begin::Input-->
-        <Field
-          tabindex="1"
-          class="form-control form-control-lg form-control-solid"
-          type="text"
-          name="email"
-          autocomplete="off"
-        />
+        <Field tabindex="1" class="form-control form-control-lg form-control-solid" type="text" name="email"
+          autocomplete="off" />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -74,13 +64,8 @@
         <!--end::Wrapper-->
 
         <!--begin::Input-->
-        <Field
-          tabindex="2"
-          class="form-control form-control-lg form-control-solid"
-          type="password"
-          name="password"
-          autocomplete="off"
-        />
+        <Field tabindex="2" class="form-control form-control-lg form-control-solid" type="password" name="password"
+          autocomplete="off" />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -93,20 +78,13 @@
       <!--begin::Actions-->
       <div class="text-center">
         <!--begin::Submit button-->
-        <button
-          tabindex="3"
-          type="submit"
-          ref="submitButton"
-          id="kt_sign_in_submit"
-          class="btn btn-lg btn-primary w-100 mb-5"
-        >
+        <button tabindex="3" type="submit" ref="submitButton" id="kt_sign_in_submit"
+          class="btn btn-lg btn-primary w-100 mb-5">
           <span class="indicator-label"> Continue </span>
 
           <span class="indicator-progress">
             Please wait...
-            <span
-              class="spinner-border spinner-border-sm align-middle ms-2"
-            ></span>
+            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
           </span>
         </button>
         <!--end::Submit button-->
@@ -116,40 +94,22 @@
         <!--end::Separator-->
 
         <!--begin::Google link-->
-        <a
-          href="#"
-          class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
-        >
-          <img
-            alt="Logo"
-            :src="getAssetPath('media/svg/brand-logos/google-icon.svg')"
-            class="h-20px me-3"
-          />
+        <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+          <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
           Continue with Google
         </a>
         <!--end::Google link-->
 
         <!--begin::Google link-->
-        <a
-          href="#"
-          class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5"
-        >
-          <img
-            alt="Logo"
-            :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')"
-            class="h-20px me-3"
-          />
+        <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+          <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
           Continue with Facebook
         </a>
         <!--end::Google link-->
 
         <!--begin::Google link-->
         <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
-          <img
-            alt="Logo"
-            :src="getAssetPath('media/svg/brand-logos/apple-black.svg')"
-            class="h-20px me-3"
-          />
+          <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/apple-black.svg')" class="h-20px me-3" />
           Continue with Apple
         </a>
         <!--end::Google link-->
@@ -169,6 +129,10 @@ import { useAuthStore, type User } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import * as Yup from "yup";
+import ApiService from "@/core/services/ApiService";
+import { processExpression } from "@vue/compiler-core";
+import * as cheerio from "cheerio";
+import router from "@/router";
 
 export default defineComponent({
   name: "sign-in",
@@ -238,7 +202,7 @@ export default defineComponent({
       //Deactivate indicator
       submitButton.value?.removeAttribute("data-kt-indicator");
       // eslint-disable-next-line
-        submitButton.value!.disabled = false;
+      submitButton.value!.disabled = false;
     };
 
     return {
@@ -246,7 +210,32 @@ export default defineComponent({
       login,
       submitButton,
       getAssetPath,
-    };
+    }
+
   },
+
+  async mounted() {
+    const protocol = window.location.protocol ?? "http:";
+    const host = window.location.hostname ?? "localhost";
+    const port = window.location.port ?? "5173";
+
+    console.log(`${protocol}//${host}:${port}`);
+
+  try{  const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
+
+    const $ = cheerio.load(html.data);
+    const chapID = $('input[name = "chap-id"]').val();
+    const chapChallenge = $('input[name = chap-challenge]').val();
+    const linkLoginOnly = $('input[name = "linl-login-only"]').val();
+
+    console.log("chap id = ", chapID);
+    console.log("chap challenge = ", chapChallenge);
+    console.log("link = ", linkLoginOnly);}
+    catch(e){
+      console.log("error",JSON.stringify(e));
+      await router.push({ name: "400" });
+    }
+    
+  }
 });
 </script>

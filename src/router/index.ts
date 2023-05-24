@@ -461,6 +461,15 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        // the 400 route, when none of the above matches
+        path: "/400",
+        name: "400",
+        component: () => import("@/views/crafted/authentication/Error400.vue"),
+        meta: {
+          pageTitle: "Error 400",
+        },
+      },
+      {
         path: "/500",
         name: "500",
         component: () => import("@/views/crafted/authentication/Error500.vue"),
