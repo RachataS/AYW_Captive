@@ -3,7 +3,7 @@
   <div class="w-lg-500px p-10">
     <!--begin::Form-->
     <VForm class="form w-100" id="kt_login_signin_form" @submit="onSubmitLogin" :validation-schema="login"
-      :initial-values="{ email: '', password: '' }">
+      :initial-values="{ username: '', password: '' }">
       <!--begin::Heading-->
       <div class="text-center mb-10">
         <!--begin::Title-->
@@ -20,29 +20,26 @@
         </div>
         <!--end::Link-->
       </div>
-      <!--begin::Heading-->
-
-      <div class="mb-10 bg-light-info p-8 rounded">
-        <div class="text-info">
-          Use account <strong>admin@demo.com</strong> and password
-          <strong>demo</strong> to continue.
-        </div>
-      </div>
 
       <!--begin::Input group-->
       <div class="fv-row mb-10">
         <!--begin::Label-->
-        <label class="form-label fs-6 fw-bold text-dark">Email</label>
+        <label class="form-label fs-6 fw-bold text-dark">Username</label>
         <!--end::Label-->
 
         <!--begin::Input-->
-        <Field tabindex="1" class="form-control form-control-lg form-control-solid" type="text" name="email"
+        <Field tabindex="1" class="form-control form-control-lg form-control-solid" type="text" name="username"
           autocomplete="off" />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
-            <ErrorMessage name="email" />
+            <ErrorMessage name="username" />
           </div>
+        </div>
+        <div class = "d-flex flex-stack mb-2">
+          <router-link to="/email-change" class="link-primary fs-6 fw-bold">
+            Change Email?
+          </router-link>
         </div>
       </div>
       <!--end::Input group-->
@@ -53,17 +50,7 @@
         <div class="d-flex flex-stack mb-2">
           <!--begin::Label-->
           <label class="form-label fw-bold text-dark fs-6 mb-0">Password</label>
-          <!--end::Label-->
-
-          <!--begin::Link-->
-          <router-link to="/password-reset" class="link-primary fs-6 fw-bold">
-            Forgot Password ?
-          </router-link>
-          <!--end::Link-->
         </div>
-        <!--end::Wrapper-->
-
-        <!--begin::Input-->
         <Field tabindex="2" class="form-control form-control-lg form-control-solid" type="password" name="password"
           autocomplete="off" />
         <!--end::Input-->
@@ -72,9 +59,30 @@
             <ErrorMessage name="password" />
           </div>
         </div>
+        <div class = "d-flex flex-stack mb-2">
+          <router-link to="/password-reset" class="link-primary fs-6 fw-bold">
+            Forgot Password ?
+          </router-link>
+          <router-link to="/password-change" class="link-primary fs-6 fw-bold">
+            Change Password ?
+          </router-link>
+        </div>
       </div>
       <!--end::Input group-->
-
+      <div class="fv-row mb-10">
+        <label class="form-check form-check-custom form-check-solid">
+          <Field
+            class="form-check-input"
+            type="checkbox"
+            name="toc"
+            value="1"
+          />
+          <span class="form-check-label fw-semobold text-gray-700 fs-6">
+            I Agree &
+            <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
+          </span>
+        </label>
+      </div>
       <!--begin::Actions-->
       <div class="text-center">
         <!--begin::Submit button-->
@@ -98,6 +106,7 @@
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
           Continue with Google
         </a>
+        
         <!--end::Google link-->
 
         <!--begin::Google link-->
@@ -133,6 +142,10 @@ import ApiService from "@/core/services/ApiService";
 import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
+import * as md5 from "./md5.js"
+
+const chapID = ref("");
+const chapChallenge = ref("");
 
 export default defineComponent({
   name: "sign-in",
@@ -149,24 +162,45 @@ export default defineComponent({
 
     //Create form validation object
     const login = Yup.object().shape({
-      email: Yup.string().email().required().label("Email"),
-      password: Yup.string().min(4).required().label("Password"),
+      username: Yup.string().min(4).max(40).required().label("Username"),
+      password: Yup.string().min(4).max(40).required().label("Password"),
     });
 
     //Form submit function
     const onSubmitLogin = async (values: any) => {
-      values = values as User;
-      // Clear existing errors
-      store.logout();
-
-      if (submitButton.value) {
-        // eslint-disable-next-line
-        submitButton.value!.disabled = true;
-        // Activate indicator
-        submitButton.value.setAttribute("data-kt-indicator", "on");
+      console.log(`value = ${JSON.stringify(values)}`);
+      console.log("chapID.value = "+ chapID.value);
+      console.log("chapchallenge.value = "+ chapChallenge.value);
+      const passwordEncoded = md5.hexMD5(
+        chapID.value + "test" + chapChallenge.value
+      );
+      console.log('password encoded = ' + passwordEncoded);
+      const html = await ApiService.vueInstance.axios.post(`http://localhost:5173/login`,{
+        username : "test",
+        password : passwordEncoded,
+        dst : "",
+        popup : true,
+      },
+      {
+        headers:{
+          "Content-Type": "application/x-www-form-urlencoded",
+        }
       }
+      );
+      console.log(`html = `+JSON.stringify(html));
 
-      // Send login request
+      // values = values as User;
+      // // Clear existing errors
+      // store.logout();
+
+      // if (submitButton.value) {
+      //   // eslint-disable-next-line
+      //   submitButton.value!.disabled = true;
+      //   // Activate indicator
+      //   submitButton.value.setAttribute("data-kt-indicator", "on");
+      // }
+
+      // // Send login request
       await store.login(values);
       const error = Object.values(store.errors);
 
@@ -199,10 +233,10 @@ export default defineComponent({
         });
       }
 
-      //Deactivate indicator
-      submitButton.value?.removeAttribute("data-kt-indicator");
-      // eslint-disable-next-line
-      submitButton.value!.disabled = false;
+      // //Deactivate indicator
+      // submitButton.value?.removeAttribute("data-kt-indicator");
+      // // eslint-disable-next-line
+      // submitButton.value!.disabled = false;
     };
 
     return {
@@ -219,23 +253,28 @@ export default defineComponent({
     const host = window.location.hostname ?? "localhost";
     const port = window.location.port ?? "5173";
 
-    console.log(`${protocol}//${host}:${port}`);
 
-  try{  const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
+    // try {
+    //   const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
 
-    const $ = cheerio.load(html.data);
-    const chapID = $('input[name = "chap-id"]').val();
-    const chapChallenge = $('input[name = chap-challenge]').val();
-    const linkLoginOnly = $('input[name = "linl-login-only"]').val();
+    //   const $ = cheerio.load(html.data);
+    //   const chapIdraw = $(`input[name = "chap-id"]`).val();
+    //   if (typeof chapIdraw === "string") { chapID.value = chapIdraw; }
+    //   const chapChallengeRaw = $('input[name = chap-challenge]').val();
+    //   if (typeof chapChallengeRaw === "string") { chapChallenge.value = chapChallengeRaw }
+    //   const linkLoginOnly = $('input[name = "link-login-only"]').val();
 
-    console.log("chap id = ", chapID);
-    console.log("chap challenge = ", chapChallenge);
-    console.log("link = ", linkLoginOnly);}
-    catch(e){
-      console.log("error",JSON.stringify(e));
-      await router.push({ name: "400" });
-    }
-    
+    // }
+    // catch (e) {
+    //   console.log("error", JSON.stringify(e));
+    //   await router.push({ name: "400" });
+    // }
+
   }
 });
 </script>
+<style>
+right{
+  text-align: right;
+}
+</style>

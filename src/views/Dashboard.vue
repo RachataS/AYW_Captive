@@ -1,33 +1,6 @@
 <template>
   <!--begin::Row-->
   <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-    <!--begin::Col-->
-    <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
-      <Widget1
-        className="h-md-50 mb-5 mb-xl-10"
-        description="Active Projects"
-        bgColor="#F1416C"
-        :bgImage="getAssetPath('media/patterns/vector-1.png')"
-      />
-
-      <Widget2
-        className="h-md-50 mb-5 mb-xl-10"
-        :icon="false"
-        stats="357"
-        description="Professionals"
-        labelColor="dark"
-        textColor="gray-300"
-      />
-    </div>
-    <!--end::Col-->
-
-    <!--begin::Col-->
-    <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
-      <Widget3 className="h-md-50 mb-5 mb-xl-10" :chartSize="70" />
-
-      <Widget4 className="h-lg-50" />
-    </div>
-    <!--end::Col-->
 
     <!--begin::Col-->
     <div class="col-xxl-6">
@@ -35,62 +8,7 @@
     </div>
     <!--end::Col-->
   </div>
-  <!--end::Row-->
-
-  <!--begin::Row-->
-  <div class="row gx-5 gx-xl-10">
-    <!--begin::Col-->
-    <div class="col-xxl-6 mb-5 mb-xl-10">
-      <Widget6 className="h-xl-100" height="275px" />
-    </div>
-    <!--end::Col-->
-
-    <!--begin::Col-->
-    <div class="col-xl-6 mb-5 mb-xl-10">
-      <Widget7 className="h-xl-100" />
-    </div>
-    <!--end::Col-->
-  </div>
-  <!--end::Row-->
-
-  <!--begin::Row-->
-  <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-    <!--begin::Col-->
-    <div class="col-xxl-6">
-      <Widget8
-        className="h-xl-100"
-        :image="getAssetPath('media/stock/600x600/img-65.jpg')"
-      />
-    </div>
-    <!--end::Col-->
-
-    <!--begin::Col-->
-    <div class="col-xl-6">
-      <Widget9 className="h-lg-100" :height="300" />
-    </div>
-    <!--end::Col-->
-  </div>
-  <!--end::Row-->
-
-  <!--begin::Row-->
-  <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-    <!--begin::Col-->
-    <div class="col-xl-4">
-      <MixedWidget5
-        widget-classes="card-xl-stretch mb-xl-8 h-md-100"
-        chart-color="primary"
-        chart-height="150"
-      ></MixedWidget5>
-    </div>
-    <!--end::Col-->
-
-    <!--begin::Col-->
-    <div class="col-xl-8">
-      <Widget10 className="h-md-100" />
-    </div>
-    <!--end::Col-->
-  </div>
-  <!--end::Row-->
+  
 </template>
 
 <script lang="ts">

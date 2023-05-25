@@ -11,18 +11,34 @@
       <!--begin::Heading-->
       <div class="text-center mb-10">
         <!--begin::Title-->
-        <h1 class="text-dark mb-3">Forgot Password ?</h1>
+        <h1 class="text-dark mb-3">Reset password</h1>
         <!--end::Title-->
 
         <!--begin::Link-->
         <div class="text-gray-400 fw-semobold fs-4">
-          Enter your email to reset your password.
+          Enter your Username and Email then check your Enail.
         </div>
         <!--end::Link-->
       </div>
       <!--begin::Heading-->
 
       <!--begin::Input group-->
+      <div class="fv-row mb-10">
+        <label class="form-label fw-bold text-gray-900 fs-6">Username</label>
+        <Field
+          class="form-control form-control-solid"
+          type="username"
+          placeholder=""
+          name="username"
+          autocomplete="off"
+          v-model="username"
+        />
+        <div class="fv-plugins-message-container">
+          <div class="fv-help-block">
+            <ErrorMessage name="username" />
+          </div>
+        </div>
+      </div>
       <div class="fv-row mb-10">
         <label class="form-label fw-bold text-gray-900 fs-6">Email</label>
         <Field
@@ -31,6 +47,7 @@
           placeholder=""
           name="email"
           autocomplete="off"
+          v-model="email"
         />
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -82,7 +99,17 @@ export default defineComponent({
     VForm,
     ErrorMessage,
   },
+  data(){
+    return{
+      username : "",
+      email:"",
+    }
+  },
   setup() {
+
+    const username = ref('');
+    const email = ref('');
+
     const store = useAuthStore();
 
     const submitButton = ref<HTMLButtonElement | null>(null);
@@ -90,16 +117,19 @@ export default defineComponent({
     //Create form validation object
     const forgotPassword = Yup.object().shape({
       email: Yup.string().email().required().label("Email"),
+      username : Yup.string().min(4).max(20).label("Username"),
     });
 
     //Form submit function
     const onSubmitForgotPassword = async (values: any) => {
+
+      console.log(`username = ${username.value}\nemail = ${email.value}`)
       values = values as string;
 
       // eslint-disable-next-line
       submitButton.value!.disabled = true;
       // Activate loading indicator
-      submitButton.value?.setAttribute("data-kt-indicator", "on");
+      submitButton.value?.setAttribute("data-kt-indicator", "on");         
 
       // dummy delay
       // Send login request
@@ -107,9 +137,9 @@ export default defineComponent({
 
       const error = Object.values(store.errors);
 
-      if (!error) {
+      if (username !== null && email !== null) {
         Swal.fire({
-          text: "You have successfully logged in!",
+          text: "please check your email!",
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok, got it!",
@@ -140,6 +170,8 @@ export default defineComponent({
       onSubmitForgotPassword,
       forgotPassword,
       submitButton,
+      username,
+      email,
     };
   },
 });
