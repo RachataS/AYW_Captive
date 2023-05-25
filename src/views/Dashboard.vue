@@ -7,7 +7,9 @@
       <Widget5 className="h-md-100" />
     </div>
     <!--end::Col-->
+
   </div>
+  
   
 </template>
 

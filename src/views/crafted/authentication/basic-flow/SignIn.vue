@@ -144,6 +144,7 @@ import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "./md5.js"
 
+
 const chapID = ref("");
 const chapChallenge = ref("");
 
@@ -272,6 +273,9 @@ export default defineComponent({
 
   }
 });
+
+export const username = "test";
+
 </script>
 <style>
 right{

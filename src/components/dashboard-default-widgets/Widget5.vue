@@ -4,71 +4,75 @@
     <div
       class="card-body d-flex flex-column justify-content-between mt-9 bgi-no-repeat bgi-size-cover bgi-position-x-center pb-0"
       :style="`background-position: 100% 50%;
-        background-image: url('${getAssetPath(
-          '/media/stock/900x600/42.png'
-        )}');`"
-    >
+                        background-image: url('${getAssetPath(
+        '/media/stock/900x600/42.png'
+      )}');`">
       <!--begin::Wrapper-->
-      <div class="mb-10">s
+      <div class="mb-10" id="app">
         <!--begin::Title-->
         <div class="fs-2hx fw-bold text-gray-800 text-center mb-13">
           <span class="me-2">
-            Try our all new Enviroment with
-            <br />
-            <span class="position-relative d-inline-block text-danger">
-              <router-link
-                to="/crafted/account/overview"
-                class="text-danger opacity-75-hover"
-                >Pro Plan</router-link
-              >
-              <!--begin::Separator-->
-              <span
-                class="position-absolute opacity-15 bottom-0 start-0 border-4 border-danger border-bottom w-100"
-              ></span>
-              <!--end::Separator-->
-            </span> </span
-          >for Free
+            <h1 style="font-size: larger;">
+              Hi, {{ shUsername }}
+              <hr>
+            </h1>
+              <h1>
+                Connection is successfully!
+              <hr>
+              </h1>
+            <h4 style="font-size: large;">
+              IP address is 192.168.xx.xx
+              <hr>
+              You're connect this network for {{ time }}
+              <hr>
+              Status refresh : None
+              <hr>
+            </h4>
+      <button @click="signOut()" type="submit"
+          ref="submitButton"
+          id="kt_password_reset_submit"
+          class="btn btn-lg btn-primary fw-bold me-4" > Sign Out </button>
+          </span>
         </div>
         <!--end::Title-->
 
         <!--begin::Action-->
-        <div class="text-center">
-          <a href="#" class="btn btn-sm btn-dark fw-bold"> Upgrade Now </a>
-        </div>
-        <!--begin::Action-->
+
       </div>
       <!--begin::Wrapper-->
 
-      <!--begin::Illustration-->
-      <img
-        class="mx-auto h-150px h-lg-200px theme-light-show"
-        :src="getAssetPath('media/illustrations/misc/upgrade.svg')"
-        alt=""
-      />
-      <img
-        class="mx-auto h-150px h-lg-200px theme-dark-show"
-        :src="getAssetPath('media/illustrations/misc/upgrade-dark.svg')"
-        alt=""
-      />
-      <!--end::Illustration-->
     </div>
     <!--end::Body-->
   </div>
 </template>
-
-<script lang="ts">
+<script lang="ts" type = "module">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-
+import { username } from "@/views/crafted/authentication/basic-flow/SignIn.vue";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "default-dashboard-widget-5",
   components: {},
+  data() {
+    return {
+      shUsername: username,
+      time: "55m ",
+    };
+  },
   props: {
     className: { type: String, required: false },
   },
   setup() {
+    const router = useRouter();
+    const store = useAuthStore();
+    const signOut = () => {
+      store.logout();
+      router.push({ name: "sign-in" });
+    };
     return {
       getAssetPath,
+      signOut,
     };
   },
 });
