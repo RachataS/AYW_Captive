@@ -9,7 +9,7 @@
         )}');`"
     >
       <!--begin::Wrapper-->
-      <div class="mb-10">
+      <div class="mb-10">s
         <!--begin::Title-->
         <div class="fs-2hx fw-bold text-gray-800 text-center mb-13">
           <span class="me-2">
