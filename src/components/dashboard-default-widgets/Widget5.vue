@@ -28,10 +28,7 @@
               Status refresh : None
               <hr>
             </h4>
-      <button @click="signOut()" type="submit"
-          ref="submitButton"
-          id="kt_password_reset_submit"
-          class="btn btn-lg btn-primary fw-bold me-4" > Sign Out </button>
+    
           </span>
         </div>
         <!--end::Title-->

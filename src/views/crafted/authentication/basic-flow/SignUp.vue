@@ -118,7 +118,7 @@ export default defineComponent({
     return {
       username: "",
       email: "",
-      password : "",
+      password: "",
     };
   },
   setup() {
@@ -159,19 +159,20 @@ export default defineComponent({
 
       if (username.value !== null && email.value !== null) {
         Swal.fire({
-          html:"You have successfully logged in!<br>Your password is "+password.value,
+          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to copy password<--`,
           icon: "success",
           buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
+          confirmButtonText: "Ok and copy",
           heightAuto: false,
           customClass: {
             confirmButton: "btn fw-semobold btn-light-primary",
           },
         }).then(function () {
-          // Go to page after successfully login
+          navigator.clipboard.writeText(`${password.value}`);
           router.push({ name: "dashboard" });
-        });
-      }else{
+        }
+        );
+      } else {
         Swal.fire({
           text: "Please enter username and password.",
           icon: "error",
