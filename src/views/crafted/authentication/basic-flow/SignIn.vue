@@ -70,18 +70,7 @@
       </div>
       <!--end::Input group-->
       <div class="fv-row mb-10">
-        <label class="form-check form-check-custom form-check-solid">
-          <Field
-            class="form-check-input"
-            type="checkbox"
-            name="toc"
-            value="1"
-          />
-          <span class="form-check-label fw-semobold text-gray-700 fs-6">
-            I Agree &
-            <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
-          </span>
-        </label>
+        
       </div>
       <!--begin::Actions-->
       <div class="text-center">

@@ -71,7 +71,7 @@
       <!--begin::Input group-->
       <div class="fv-row mb-10">
         <label class="form-check form-check-custom form-check-solid">
-          <Field class="form-check-input" type="checkbox" name="toc" value="1" />
+          <input class="form-check-input" type="checkbox" name="checkbox" value="true" v-model="agcheck" />
           <span class="form-check-label fw-semobold text-gray-700 fs-6">
             I Agree &
             <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
@@ -119,6 +119,7 @@ export default defineComponent({
       username: "",
       email: "",
       password: "",
+      agcheck: false,
     };
   },
   setup() {
@@ -126,6 +127,7 @@ export default defineComponent({
     const username = ref('');
     const email = ref('');
     const password = ref('');
+    var agcheck = ref('');
 
     const store = useAuthStore();
     const router = useRouter();
@@ -145,6 +147,7 @@ export default defineComponent({
 
     const onSubmitRegister = async (values: any) => {
       console.log('username = ', username.value, 'email = ', email.value);
+      console.log("checkbox = ",agcheck.value);
 
       const length = 10;
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -156,8 +159,8 @@ export default defineComponent({
       }
 
       password.value = result;
-
-      if (username.value !== null && email.value !== null) {
+      
+      if (username.value !== null && email.value !== null && agcheck.value === true) {
         Swal.fire({
           html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to copy password<--`,
           icon: "success",
@@ -173,16 +176,29 @@ export default defineComponent({
         }
         );
       } else {
-        Swal.fire({
-          text: "Please enter username and password.",
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semobold btn-light-danger",
-          },
-        });
+        if (username.value === null && email.value === null) {
+          Swal.fire({
+            text: "Please enter username and password.",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Try again!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+        } else {
+          Swal.fire({
+            text: "Please accept Terms and conditions",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Try again!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+        }
       }
 
       // values = values as User;
@@ -239,6 +255,7 @@ export default defineComponent({
       username,
       email,
       registration,
+      agcheck,
       onSubmitRegister,
       submitButton,
       getAssetPath,
