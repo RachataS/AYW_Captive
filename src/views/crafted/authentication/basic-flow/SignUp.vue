@@ -159,18 +159,17 @@ export default defineComponent({
         result += characters.charAt(randomIndex);
       }
 
-      try {
-        await ApiService.post("http://202.129.16.94:82/api/register",
+        const data = await ApiService.post("http://202.129.16.94:82/api/register",
           {
             username: "testap",
             email: "testap@testap.testap",
             password: "test"
           }
-        );
-        console.log(JSON.stringify(result));
-      } catch (e) { 
-        console.log((e as any).config.data);
-      }
+        ).catch((error)=>{
+          console.log(JSON.stringify(error.response.data));
+          console.log(JSON.stringify(error.response.status));
+        });
+        console.log(JSON.stringify(data));
 
       password.value = result;
 
