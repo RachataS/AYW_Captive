@@ -3,13 +3,11 @@
   <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
 
     <!--begin::Col-->
-    <div class="col-xxl-6">
+    <div class="col-xxl-8">
       <Widget5 className="h-md-100" />
     </div>
     <!--end::Col-->
-
   </div>
-  
   
 </template>
 

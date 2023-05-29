@@ -106,6 +106,7 @@ import { useAuthStore, type User } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { PasswordMeterComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import ApiService from "@/core/services/ApiService";
 
 export default defineComponent({
   name: "sign-up",
@@ -147,7 +148,7 @@ export default defineComponent({
 
     const onSubmitRegister = async (values: any) => {
       console.log('username = ', username.value, 'email = ', email.value);
-      console.log("checkbox = ",agcheck.value);
+      console.log("checkbox = ", agcheck.value);
 
       const length = 10;
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -158,8 +159,21 @@ export default defineComponent({
         result += characters.charAt(randomIndex);
       }
 
+      try {
+        await ApiService.post("http://202.129.16.94:82/api/register",
+          {
+            username: "testap",
+            email: "testap@testap.testap",
+            password: "test"
+          }
+        );
+        console.log(JSON.stringify(result));
+      } catch (e) { 
+        console.log((e as any).config.data);
+      }
+
       password.value = result;
-      
+
       if (username.value !== null && email.value !== null && agcheck.value === true) {
         Swal.fire({
           html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to copy password<--`,

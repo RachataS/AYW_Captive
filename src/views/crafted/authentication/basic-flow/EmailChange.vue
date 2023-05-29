@@ -16,7 +16,7 @@
 
         <!--begin::Link-->
         <div class="text-gray-400 fw-semobold fs-4">
-          Enter your Username,Old email, new email and password
+          Enter your username, new email and password
         </div>
         <!--end::Link-->
       </div>
@@ -40,18 +40,18 @@
         </div>
       </div>
       <div class="fv-row mb-10">
-        <label class="form-label fw-bold text-gray-900 fs-6">Old email</label>
+        <label class="form-label fw-bold text-gray-900 fs-6">Password</label>
         <Field
           class="form-control form-control-solid"
-          type="email"
+          type="password"
           placeholder=""
-          name="oldemail"
+          name="password"
           autocomplete="off"
-          v-model="oldemail"
+          v-model="password"
         />
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
-            <ErrorMessage name="oldemail" />
+            <ErrorMessage name="password" />
           </div>
         </div>
       </div>
@@ -68,22 +68,6 @@
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
             <ErrorMessage name="newemail" />
-          </div>
-        </div>
-      </div>
-      <div class="fv-row mb-10">
-        <label class="form-label fw-bold text-gray-900 fs-6">Password</label>
-        <Field
-          class="form-control form-control-solid"
-          type="password"
-          placeholder=""
-          name="password"
-          autocomplete="off"
-          v-model="password"
-        />
-        <div class="fv-plugins-message-container">
-          <div class="fv-help-block">
-            <ErrorMessage name="password" />
           </div>
         </div>
       </div>
@@ -135,14 +119,12 @@ export default defineComponent({
 return{
   username:"",
   oldemail:"",
-  newemail:"",
   password:"",
 }
   },
   setup() {
 
     const username = ref('');
-    const oldemail = ref('');
     const newemail = ref('');
     const password = ref('');
     const store = useAuthStore();
@@ -159,9 +141,9 @@ return{
 
     //Form submit function
     const onSubmitForgotPassword = async (values: any) => {
-      console.log(`username = ${username.value}\nold email = ${oldemail.value}\nnew email = ${newemail.value}\npassword = ${password.value}`)
+      console.log(`username = ${username.value}\nnew email = ${newemail.value}\npassword = ${password.value}`)
 
-      if (username !== null&& oldemail !== null && newemail!== null&&password!== null) {
+      if (username !== null&& newemail!== null&&password!== null) {
         Swal.fire({
           text: "You have successfully changed your email!",
           icon: "success",
@@ -228,7 +210,6 @@ return{
 
     return {
       username,
-      oldemail,
       newemail,
       password,
       onSubmitForgotPassword,
