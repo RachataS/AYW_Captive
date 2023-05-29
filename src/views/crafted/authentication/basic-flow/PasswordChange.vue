@@ -181,7 +181,7 @@ export default defineComponent({
       console.log(`username = ${username.value}\npassword = ${oldpassword.value}\nnew password = ${newpassword.value}`);
       console.log(`error status = ${errorStatus}\nerror data = ${errorData}`)
 
-      if (username !== null&& oldpassword !== null && newpassword!== null&&conpassword!== null) {
+      if (errorStatus === 200) {
         Swal.fire({
           text: "You have successfully changed your password!",
           icon: "success",
@@ -194,7 +194,7 @@ export default defineComponent({
         })
       }else{
         Swal.fire({
-          text: "Please enter username, password,old email and new email.",
+          html:`${errorStatus}<br>${errorData}`,
           icon: "error",
           buttonsStyling: false,
           confirmButtonText: "Try again!",
