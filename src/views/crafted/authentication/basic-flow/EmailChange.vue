@@ -80,7 +80,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import ApiService from "@/core/services/ApiService";
 
 export default defineComponent({
-  name: "password-change",
+  name: "email-change",
   components: {
     Field,
     VForm,
