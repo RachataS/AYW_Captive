@@ -71,7 +71,7 @@
       <!--begin::Input group-->
       <div class="fv-row mb-10">
         <label class="form-check form-check-custom form-check-solid">
-          <input class="form-check-input" type="checkbox" name="checkbox" value="true" v-model="agcheck" />
+          <input class="form-check-input" type="checkbox" name = "checkbox" value="true" v-model="agcheck" />
           <span class="form-check-label fw-semobold text-gray-700 fs-6">
             I Agree &
             <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
@@ -120,7 +120,7 @@ export default defineComponent({
       username: "",
       email: "",
       password: "",
-      agcheck: false,
+      agcheck: "",
     };
   },
   setup() {
@@ -147,33 +147,47 @@ export default defineComponent({
     });
 
     const onSubmitRegister = async (values: any) => {
-      console.log('username = ', username.value, 'email = ', email.value);
-      console.log("checkbox = ", agcheck.value);
+      let errorData;
+      let errorStatus = 200;
 
       const length = 10;
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
 
-      for (let i = 0; i < length; i++) {
+      
+
+if(agcheck.value){
+  for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
         result += characters.charAt(randomIndex);
       }
-
-        const data = await ApiService.post("http://202.129.16.94:82/api/register",
-          {
-            username: "testap",
-            email: "testap@testap.testap",
-            password: "test"
-          }
-        ).catch((error)=>{
-          console.log(JSON.stringify(error.response.data));
-          console.log(JSON.stringify(error.response.status));
-        });
-        console.log(JSON.stringify(data));
-
       password.value = result;
+}else{
+  Swal.fire({
+            text: "Please accept Terms and conditions",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Try again!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+}
 
-      if (username.value !== null && email.value !== null && agcheck.value === true) {
+      const data = await ApiService.post("http://202.129.16.94:82/api/register",
+        {
+          username: username.value,
+          email: email.value,
+          password: password.value
+        }
+      ).catch((error) => {
+        errorData = error.response.data.error;
+        errorStatus = error.response.status;
+      });
+      console.log("data = " + JSON.stringify(data));
+
+      if (errorStatus === 200) {
         Swal.fire({
           html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to copy password<--`,
           icon: "success",
@@ -188,31 +202,35 @@ export default defineComponent({
           router.push({ name: "dashboard" });
         }
         );
-      } else {
-        if (username.value === null && email.value === null) {
-          Swal.fire({
-            text: "Please enter username and password.",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Try again!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semobold btn-light-danger",
-            },
-          });
-        } else {
-          Swal.fire({
-            text: "Please accept Terms and conditions",
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Try again!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semobold btn-light-danger",
-            },
-          });
-        }
+
+      } else if(agcheck.value) {
+        // if (username.value === null && email.value === null) {
+        Swal.fire({
+          html: `Error : ${errorStatus}<br>${errorData}`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again!",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-danger",
+          },
+        });
+        console.log(`username = ${username.value}\nEmail = ${email.value}\npassword = ${password.value}`);
+        console.log(`error status = ${errorStatus}\nerror data = ${errorData}`);
+        // } else {
+        //   Swal.fire({
+        //     text: "Please accept Terms and conditions",
+        //     icon: "error",
+        //     buttonsStyling: false,
+        //     confirmButtonText: "Try again!",
+        //     heightAuto: false,
+        //     customClass: {
+        //       confirmButton: "btn fw-semobold btn-light-danger",
+        //     },
+        //   });
+        // }
       }
+
 
       // values = values as User;
 
