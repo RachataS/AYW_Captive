@@ -31,6 +31,7 @@
           placeholder=""
           name="username"
           autocomplete="off"
+          v-model="username"
         />
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -46,6 +47,7 @@
           placeholder=""
           name="oldpassword"
           autocomplete="off"
+          v-model="oldpassword"
         />
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -61,6 +63,7 @@
           placeholder=""
           name="newpassword"
           autocomplete="off"
+          v-model="newpassword"
         />
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -76,6 +79,7 @@
           placeholder=""
           name="conpassword"
           autocomplete="off"
+          v-model="conpassword"
         />
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -119,6 +123,7 @@ import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import { useAuthStore } from "@/stores/auth";
 import * as Yup from "yup";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import ApiService from "@/core/services/ApiService";
 
 export default defineComponent({
   name: "password-change",
@@ -158,6 +163,24 @@ export default defineComponent({
 
     //Form submit function
     const onSubmitForgotPassword = async (values: any) => {
+
+      let errorData;
+      let errorStatus = 200;
+
+      const data = await ApiService.vueInstance.axios.patch("http://202.129.16.94:82/api/changePassword",
+        {
+          username : username.value,
+          password : oldpassword.value,
+          new_password : newpassword.value,
+        }
+      ).catch((error) => {
+        errorData = error.response.data.error;
+        errorStatus = error.response.status;
+      });
+
+      console.log(`username = ${username.value}\npassword = ${oldpassword.value}\nnew password = ${newpassword.value}`);
+      console.log(`error status = ${errorStatus}\nerror data = ${errorData}`)
+
       if (username !== null&& oldpassword !== null && newpassword!== null&&conpassword!== null) {
         Swal.fire({
           text: "You have successfully changed your password!",
