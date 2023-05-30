@@ -160,7 +160,7 @@ export default defineComponent({
     const onSubmitLogin = async (values: any) => {
       console.log(`value = ${JSON.stringify(values)}`);
       const passwordEncoded = md5.hexMD5(
-        chapID.value + "Tonnam" + chapChallenge.value
+        chapID.value + "12345" + chapChallenge.value
       );
       console.log('password encoded = ' + passwordEncoded);
       try{
@@ -195,7 +195,7 @@ export default defineComponent({
       // }
 
       // // Send login request
-      await store.login(values);
+     // await store.login(values);
       const error = Object.values(store.errors);
 
       if (error.length === 0) {
@@ -284,8 +284,3 @@ export default defineComponent({
 export const username = "test";
 
 </script>
-<style>
-right{
-  text-align: right;
-}
-</style>
