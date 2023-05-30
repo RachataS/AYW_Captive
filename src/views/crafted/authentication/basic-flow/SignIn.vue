@@ -191,9 +191,66 @@ export default defineComponent({
         withCredentials: false,
       }
       );
-      console.log(`html = `+JSON.stringify(html));
+
+      const $ = cheerio.load(html.data.toString());
+      const errorRaw = $(`input[name = "error"]`).val() as string;
+      console.log("errorRaw = "+JSON.stringify(errorRaw));
+      if(typeof errorRaw === "undefined"){
+        const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
+      console.log("chapIDRaw = "+JSON.stringify(chapIdraw));
+      if(typeof chapIdraw === "undefined"){
+        await router.push({name: "dashboard"});
+        return;
+      }else{
+        Swal.fire({
+          html:`Error! <br>${errorRaw}`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        });
+      }
+      }else{
+        if(errorRaw === "Accept"){
+          Swal.fire({
+          html:`Error! <br>Wrong Password`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        });
+        }else if(errorRaw === "invalid username or password"){
+          Swal.fire({
+          html:`Error! <br>${errorRaw}`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        });
+        }else{
+          Swal.fire({
+          html:`Error! <br>${errorRaw}`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        });
+        }
+      }
     }catch(e){
-      console.log("erorr = "+ JSON.stringify(e));
+      await router.push({ name: "400" });
     }
 
       // values = values as User;
@@ -211,7 +268,7 @@ export default defineComponent({
      // await store.login(values);
       const error = Object.values(store.errors);
 
-      if (error.length === 0) {
+      if (typeof errorRaw === "undefined") {
         Swal.fire({
           text: "You have successfully logged in!",
           icon: "success",
@@ -262,13 +319,16 @@ export default defineComponent({
     const host = window.location.hostname ?? "localhost";
     const port = window.location.port ?? "5173";
 
-
     try {
       const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
-
       const $ = cheerio.load(html.data.toString());
-
       const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
+      console.log("chapIDRaw = "+JSON.stringify(chapIdraw));
+      const errorRaw = $(`input[name = "error"]`).val() as string;
+      if(typeof chapIdraw === "undefined"){
+        await router.push({name: "dashboard"})
+        return;
+      }
       const chapIdOctals = chapIdraw.split("\\");
       const chapIdCode = parseInt(chapIdOctals[1],8);
       chapID.value = String.fromCharCode(chapIdCode);
@@ -284,7 +344,6 @@ export default defineComponent({
         chapChallengeCodes.push(code);
       }
       chapChallenge.value = String.fromCharCode(...chapChallengeCodes);
-
       console.log("chap id = "+ chapIdraw);
       console.log("chap challenge = "+ chapChallengeRaw);
     }
