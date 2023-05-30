@@ -29,7 +29,7 @@
 
         <!--begin::Input-->
         <Field tabindex="1" class="form-control form-control-lg form-control-solid" type="text" name="username"
-          autocomplete="off" />
+          autocomplete="off" v-model="username" />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -52,7 +52,7 @@
           <label class="form-label fw-bold text-dark fs-6 mb-0">Password</label>
         </div>
         <Field tabindex="2" class="form-control form-control-lg form-control-solid" type="password" name="password"
-          autocomplete="off" />
+          autocomplete="off" v-model="password" />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -144,9 +144,18 @@ export default defineComponent({
     VForm,
     ErrorMessage,
   },
+  data(){
+    return{
+      username:"",
+      password:"",
+    }
+  },
   setup() {
     const store = useAuthStore();
     const router = useRouter();
+
+    const username = ref('');
+    const password = ref('');
 
     const submitButton = ref<HTMLButtonElement | null>(null);
 
@@ -158,15 +167,19 @@ export default defineComponent({
 
     //Form submit function
     const onSubmitLogin = async (values: any) => {
+
+      let errorData;
+      let errorStatus = 200;
+
       console.log(`value = ${JSON.stringify(values)}`);
       const passwordEncoded = md5.hexMD5(
-        chapID.value + "12345" + chapChallenge.value
+        chapID.value + password.value + chapChallenge.value
       );
       console.log('password encoded = ' + passwordEncoded);
       try{
       let html = await ApiService.vueInstance.axios.post(`http://localhost:5173/login`,
       {
-        username : "Tonnam",
+        username : username.value,
         password : passwordEncoded,
         dst : "",
         popup : true,
@@ -180,7 +193,7 @@ export default defineComponent({
       );
       console.log(`html = `+JSON.stringify(html));
     }catch(e){
-      console.log("erorr = "+ JSON.stringify(e))
+      console.log("erorr = "+ JSON.stringify(e));
     }
 
       // values = values as User;
@@ -238,6 +251,8 @@ export default defineComponent({
       login,
       submitButton,
       getAssetPath,
+      username,
+      password,
     }
 
   },
