@@ -167,9 +167,7 @@ export default defineComponent({
 
     //Form submit function
     const onSubmitLogin = async (values: any) => {
-
-      let errorData;
-      let errorStatus = 200;
+      let errorRaw;
 
       console.log(`value = ${JSON.stringify(values)}`);
       const passwordEncoded = md5.hexMD5(
@@ -193,26 +191,25 @@ export default defineComponent({
         );
 
         const $ = cheerio.load(html.data.toString());
-        const errorRaw = $(`input[name = "error"]`).val() as string;
+        errorRaw = $(`input[name = "error"]`).val() as string;
         console.log("errorRaw = " + JSON.stringify(errorRaw));
         if (typeof errorRaw === "undefined") {
           const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
           console.log("chapIDRaw = " + JSON.stringify(chapIdraw));
           if (typeof chapIdraw === "undefined") {
             Swal.fire({
-              text: "You have successfully logged in!",
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok, got it!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-primary",
-              },
-            }).then(() => {
-              // Go to page after successfully login
-              router.push({ name: "dashboard" });
-            });
-            return;
+          text: "You have successfully logged in!",
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        }).then(() => {
+          // Go to page after successfully login
+          router.push({ name: "dashboard" });
+        });
           } else {
             Swal.fire({
               html: `Error! <br>${errorRaw}`,
@@ -224,6 +221,7 @@ export default defineComponent({
                 confirmButton: "btn fw-semobold btn-light-primary",
               },
             });
+            getchap();
           }
         } else {
           if (errorRaw === "Accept") {
@@ -237,6 +235,8 @@ export default defineComponent({
                 confirmButton: "btn fw-semobold btn-light-primary",
               },
             });
+            getchap();
+            console.log(`chapID = ${chapID.value}\nchapCha = ${chapChallenge.value}`);
           } else if (errorRaw === "invalid username or password") {
             Swal.fire({
               html: `Error! <br>${errorRaw}`,
@@ -248,6 +248,8 @@ export default defineComponent({
                 confirmButton: "btn fw-semobold btn-light-primary",
               },
             });
+            getchap();
+            console.log(`chapID = ${chapID.value}\nchapCha = ${chapChallenge.value}`);
           } else {
             Swal.fire({
               html: `Error! <br>${errorRaw}`,
@@ -259,6 +261,7 @@ export default defineComponent({
                 confirmButton: "btn fw-semobold btn-light-primary",
               },
             });
+            getchap();
           }
         }
       } catch (e) {
@@ -269,45 +272,43 @@ export default defineComponent({
       // // Clear existing errors
       // store.logout();
 
-      if (submitButton.value) {
-        // eslint-disable-next-line
-        submitButton.value!.disabled = true;
-        // Activate indicator
-        submitButton.value.setAttribute("data-kt-indicator", "on");
-      }
+      // if (submitButton.value) {
+      //   // eslint-disable-next-line
+      //   submitButton.value!.disabled = true;
+      //   // Activate indicator
+      //   submitButton.value.setAttribute("data-kt-indicator", "on");
+      // }
 
       // Send login request
       // await store.login(values);
-      const error = Object.values(store.errors);
-
-      if (error.length === 0) {
-        Swal.fire({
-          text: "You have successfully logged in!",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semobold btn-light-primary",
-          },
-        }).then(() => {
-          // Go to page after successfully login
-          router.push({ name: "dashboard" });
-        });
-      } else {
-        Swal.fire({
-          text: error[0] as string,
-          icon: "error",
-          buttonsStyling: false,
-          confirmButtonText: "Try again!",
-          heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semobold btn-light-danger",
-          },
-        }).then(() => {
-          store.errors = {};
-        });
-      }
+      // if (errorRaw === "undefined") {
+      //   Swal.fire({
+      //     text: "You have successfully logged in!",
+      //     icon: "success",
+      //     buttonsStyling: false,
+      //     confirmButtonText: "Ok, got it!",
+      //     heightAuto: false,
+      //     customClass: {
+      //       confirmButton: "btn fw-semobold btn-light-primary",
+      //     },
+      //   }).then(() => {
+      //     // Go to page after successfully login
+      //     router.push({ name: "dashboard" });
+      //   });
+      // } else {
+      //   Swal.fire({
+      //     html: `Error! <br>${errorRaw}`,
+      //     icon: "error",
+      //     buttonsStyling: false,
+      //     confirmButtonText: "Try again!",
+      //     heightAuto: false,
+      //     customClass: {
+      //       confirmButton: "btn fw-semobold btn-light-danger",
+      //     },
+      //   }).then(() => {
+      //     store.errors = {};
+      //   });
+      // }
 
       // //Deactivate indicator
       // submitButton.value?.removeAttribute("data-kt-indicator");
@@ -327,7 +328,12 @@ export default defineComponent({
   },
 
   async mounted() {
-    const protocol = window.location.protocol ?? "http:";
+    getchap();
+  }
+});
+
+async function getchap() {
+  const protocol = window.location.protocol ?? "http:";
     const host = window.location.hostname ?? "localhost";
     const port = window.location.port ?? "5173";
 
@@ -363,8 +369,8 @@ export default defineComponent({
       await router.push({ name: "400" });
     }
 
-  }
-});
+  
+}
 
 export const username = "test";
 
