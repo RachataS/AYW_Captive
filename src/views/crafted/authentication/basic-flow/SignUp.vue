@@ -74,7 +74,9 @@
           <input class="form-check-input" type="checkbox" name = "checkbox" value="true" v-model="agcheck" />
           <span class="form-check-label fw-semobold text-gray-700 fs-6">
             I Agree &
-            <a href="#" class="ms-1 link-primary">Terms and conditions</a>.
+            <router-link to="/termAndCon" class="link-primary fw-bold">
+              Terms and conditions
+          </router-link>
           </span>
         </label>
       </div>

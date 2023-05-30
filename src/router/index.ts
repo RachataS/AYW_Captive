@@ -454,6 +454,15 @@ const routes: Array<RouteRecordRaw> = [
           pageTitle: "Email change",
         },
       },
+      {
+        path: "/termAndCon",
+        name: "termAndCon",
+        component: () =>
+          import("@/views/crafted/authentication/basic-flow/tremAndCon.vue"),
+        meta: {
+          pageTitle: "Email change",
+        },
+      },
     ],
   },
   {
