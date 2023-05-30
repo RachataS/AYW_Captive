@@ -131,7 +131,7 @@ import ApiService from "@/core/services/ApiService";
 import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
-import * as md5 from "./md5.js"
+import * as md5 from "@/core/plugins/md5";
 
 
 const chapID = ref("");
@@ -159,14 +159,14 @@ export default defineComponent({
     //Form submit function
     const onSubmitLogin = async (values: any) => {
       console.log(`value = ${JSON.stringify(values)}`);
-      console.log("chapID.value = "+ chapID.value);
-      console.log("chapchallenge.value = "+ chapChallenge.value);
       const passwordEncoded = md5.hexMD5(
-        chapID.value + "test" + chapChallenge.value
+        chapID.value + "Tonnam" + chapChallenge.value
       );
       console.log('password encoded = ' + passwordEncoded);
-      const html = await ApiService.vueInstance.axios.post(`http://localhost:5173/login`,{
-        username : "test",
+      try{
+      let html = await ApiService.vueInstance.axios.post(`http://localhost:5173/login`,
+      {
+        username : "Tonnam",
         password : passwordEncoded,
         dst : "",
         popup : true,
@@ -174,10 +174,14 @@ export default defineComponent({
       {
         headers:{
           "Content-Type": "application/x-www-form-urlencoded",
-        }
+        },
+        withCredentials: false,
       }
       );
       console.log(`html = `+JSON.stringify(html));
+    }catch(e){
+      console.log("erorr = "+ JSON.stringify(e))
+    }
 
       // values = values as User;
       // // Clear existing errors
@@ -244,22 +248,35 @@ export default defineComponent({
     const port = window.location.port ?? "5173";
 
 
-    // try {
-    //   const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
+    try {
+      const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
 
-    //   const $ = cheerio.load(html.data);
-    //   const chapIdraw = $(`input[name = "chap-id"]`).val();
-    //   if (typeof chapIdraw === "string") { chapID.value = chapIdraw; }
-    //   const chapChallengeRaw = $('input[name = chap-challenge]').val();
-    //   if (typeof chapChallengeRaw === "string") { chapChallenge.value = chapChallengeRaw }
-    //   const linkLoginOnly = $('input[name = "link-login-only"]').val();
+      const $ = cheerio.load(html.data.toString());
 
+      const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
+      const chapIdOctals = chapIdraw.split("\\");
+      const chapIdCode = parseInt(chapIdOctals[1],8);
+      chapID.value = String.fromCharCode(chapIdCode);
 
-    // }
-    // catch (e) {
-    //   console.log("error", JSON.stringify(e));
-    //   await router.push({ name: "400" });
-    // }
+      const chapChallengeRaw = $(
+        'input[name = "chap-challenge"]'
+      ).val() as string;
+
+      const chapChallengeOctals = chapChallengeRaw.split("\\");
+      const chapChallengeCodes = [] as number [];
+      for(let i = 1;i<chapChallengeOctals.length;i++){
+        const code = parseInt (chapChallengeOctals[i],8);
+        chapChallengeCodes.push(code);
+      }
+      chapChallenge.value = String.fromCharCode(...chapChallengeCodes);
+
+      console.log("chap id = "+ chapIdraw);
+      console.log("chap challenge = "+ chapChallengeRaw);
+    }
+    catch (e) {
+      console.log("error", JSON.stringify(e));
+      await router.push({ name: "400" });
+    }
 
   }
 });
