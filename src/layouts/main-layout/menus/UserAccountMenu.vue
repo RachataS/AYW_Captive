@@ -281,10 +281,47 @@
     <!--end::Menu item-->
 
     <!--begin::Menu item-->
-    <div class="menu-item px-5 my-1">
+    
+    <!--begin::Menu item-->
+    <div
+      class="menu-item px-5"
+      data-kt-menu-trigger="hover"
+      data-kt-menu-placement="left-start"
+      data-kt-menu-flip="center, top"
+    >
       <router-link to="/pages/profile/overview" class="menu-link px-5">
-        Account Settings
+        <span class="menu-title">Account Settings</span>
+        <span class="menu-arrow"></span>
       </router-link>
+
+      <!--begin::Menu sub-->
+      <div class="menu-sub menu-sub-dropdown w-175px py-4">
+        <!--begin::Menu item-->
+        <div class="menu-item px-3">
+          <router-link to="/email-change" class="menu-link px-5">
+            Change email
+          </router-link>
+        </div>
+        <!--end::Menu item-->
+
+        <!--begin::Menu item-->
+        <div class="menu-item px-3">
+          <router-link to="/password-change" class="menu-link px-5">
+            Change password
+          </router-link>
+        </div>
+        <!--end::Menu item-->
+
+        <!--begin::Menu item-->
+        <div class="menu-item px-3">
+          <router-link to="/password-reset" class="menu-link px-5">
+            Reset password
+          </router-link>
+        </div>
+
+        <!--end::Menu item-->
+      </div>
+      <!--end::Menu sub-->
     </div>
     <!--end::Menu item-->
 
