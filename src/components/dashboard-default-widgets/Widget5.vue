@@ -21,11 +21,11 @@
               <hr>
             </h1>
             <h4 style="font-size: large;">
-              IP address is 192.168.xx.xx
+              IP address is {{ip}}
               <hr>
-              You're connect this network for
+              You're connect this network for {{ uptime }}
               <hr>
-              Status refresh : None
+              Bytein : {{ bytein }} / Byteout : {{ byteout }}
               <hr>
             </h4>
 
@@ -78,11 +78,15 @@ export default defineComponent({
       const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
       const $ = cheerio.load(html.data.toString());
       const APusername = $(`input[name = "username"]`).val() as string;
-      const APip = $(`input[name = "username"]`).val() as string;
-      const APbytein = $(`input[name = "username"]`).val() as string;
-      const APbyteout = $(`input[name = "username"]`).val() as string;
-      const APuptime = $(`input[name = "username"]`).val() as string;
+      const APip = $(`input[name = "ip"]`).val() as string;
+      const APbytein = $(`input[name = "bytes-in-nice"]`).val() as string;
+      const APbyteout = $(`input[name = "bytes-out-nice"]`).val() as string;
+      const APuptime = $(`input[name = "uptime"]`).val() as string;
       this.username = APusername;
+      this.ip = APip;
+      this.bytein = APbytein;
+      this.byteout = APbyteout;
+      this.uptime = APuptime;
     }
   },
   setup() {
