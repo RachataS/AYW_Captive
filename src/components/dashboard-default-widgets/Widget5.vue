@@ -25,7 +25,7 @@
               <hr>
               You're connect this network for {{ uptime }}
               <hr>
-              Bytein : {{ bytein }} / Byteout : {{ byteout }}
+              Byte in : {{ bytein }} / Byte out : {{ byteout }}
               <hr>
             </h4>
 
