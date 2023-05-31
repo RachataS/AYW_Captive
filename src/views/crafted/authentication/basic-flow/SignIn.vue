@@ -372,6 +372,5 @@ async function getchap() {
   
 }
 
-export const username = "test";
 
 </script>

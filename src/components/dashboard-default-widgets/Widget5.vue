@@ -4,7 +4,7 @@
     <div
       class="card-body d-flex flex-column justify-content-between mt-9 bgi-no-repeat bgi-size-cover bgi-position-x-center pb-0"
       :style="`background-position: 100% 50%;
-                                background-image: url('${getAssetPath(
+                                                background-image: url('${getAssetPath(
         '/media/stock/900x600/42.png'
       )}');`">
       <!--begin::Wrapper-->
@@ -23,7 +23,7 @@
             <h4 style="font-size: large;">
               IP address is 192.168.xx.xx
               <hr>
-              You're connect this network for 
+              You're connect this network for
               <hr>
               Status refresh : None
               <hr>
@@ -57,37 +57,50 @@ export default defineComponent({
   data() {
     return {
       username: '',
+      ip: '',
+      bytein: '',
+      byteout: '',
+      uptime: '',
     };
   },
   props: {
     className: { type: String, required: false },
   },
-  
+  mounted() {
+    this.getData();
+  },
+  methods: {
+    async getData() {
+      const protocol = window.location.protocol ?? "http:";
+      const host = window.location.hostname ?? "localhost";
+      const port = window.location.port ?? "5173";
+
+      const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
+      const $ = cheerio.load(html.data.toString());
+      const APusername = $(`input[name = "username"]`).val() as string;
+      const APip = $(`input[name = "username"]`).val() as string;
+      const APbytein = $(`input[name = "username"]`).val() as string;
+      const APbyteout = $(`input[name = "username"]`).val() as string;
+      const APuptime = $(`input[name = "username"]`).val() as string;
+      this.username = APusername;
+    }
+  },
   setup() {
     const router = useRouter();
     const store = useAuthStore();
-
-    const username  = ref('');
-
+    const username = ref('');
+    const ip = ref('');
+    const bytein = ref('');
+    const uptime = ref('');
+    const byteout = ref('');
     const signOut = () => {
       store.logout();
       router.push({ name: "sign-in" });
     };
-    getData();
     return {
       getAssetPath,
       signOut,
     };
   },
 });
-async function getData() {
-  const protocol = window.location.protocol ?? "http:";
-    const host = window.location.hostname ?? "localhost";
-    const port = window.location.port ?? "5173";
-
-    const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
-    const $ = cheerio.load(html.data.toString());
-    const APusername = $(`input[name = "username"]`).val() as string;
-    console.log('username = '+JSON.stringify(APusername));
-}
 </script>
