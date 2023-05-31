@@ -13,7 +13,7 @@
         <div class="fs-2hx fw-bold text-gray-800 text-center mb-13">
           <span class="me-2">
             <h1 style="font-size: larger;">
-              Hi, {{ shUsername }}
+              Hi, {{ username }}
               <hr>
             </h1>
             <h1>
@@ -49,14 +49,14 @@ import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import ApiService from "@/core/services/ApiService";
 import * as cheerio from "cheerio";
+import UserAccountMenu from "@/layouts/main-layout/menus/UserAccountMenu.vue";
 
 export default defineComponent({
   name: "default-dashboard-widget-5",
   components: {},
   data() {
     return {
-      shUsername: 'username',
-      time: "55m ",
+      username: '',
     };
   },
   props: {
@@ -66,6 +66,9 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useAuthStore();
+
+    const username  = ref('');
+
     const signOut = () => {
       store.logout();
       router.push({ name: "sign-in" });
@@ -84,7 +87,7 @@ async function getData() {
 
     const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
     const $ = cheerio.load(html.data.toString());
-    const username = $(`input[name = "username"]`).val() as string;
-    console.log('username = '+JSON.stringify(username));
+    const APusername = $(`input[name = "username"]`).val() as string;
+    console.log('username = '+JSON.stringify(APusername));
 }
 </script>
