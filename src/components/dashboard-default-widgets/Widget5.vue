@@ -4,7 +4,7 @@
     <div
       class="card-body d-flex flex-column justify-content-between mt-9 bgi-no-repeat bgi-size-cover bgi-position-x-center pb-0"
       :style="`background-position: 100% 50%;
-                        background-image: url('${getAssetPath(
+                                background-image: url('${getAssetPath(
         '/media/stock/900x600/42.png'
       )}');`">
       <!--begin::Wrapper-->
@@ -16,19 +16,19 @@
               Hi, {{ shUsername }}
               <hr>
             </h1>
-              <h1>
-                Connection is successfully!
+            <h1>
+              Connection is successfully!
               <hr>
-              </h1>
+            </h1>
             <h4 style="font-size: large;">
               IP address is 192.168.xx.xx
               <hr>
-              You're connect this network for {{ time }}
+              You're connect this network for 
               <hr>
               Status refresh : None
               <hr>
             </h4>
-    
+
           </span>
         </div>
         <!--end::Title-->
@@ -44,22 +44,25 @@
 </template>
 <script lang="ts" type = "module">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
-import { username } from "@/views/crafted/authentication/basic-flow/SignIn.vue";
+import { defineComponent, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import ApiService from "@/core/services/ApiService";
+import * as cheerio from "cheerio";
+
 export default defineComponent({
   name: "default-dashboard-widget-5",
   components: {},
   data() {
     return {
-      shUsername: username,
+      shUsername: 'username',
       time: "55m ",
     };
   },
   props: {
     className: { type: String, required: false },
   },
+  
   setup() {
     const router = useRouter();
     const store = useAuthStore();
@@ -67,10 +70,21 @@ export default defineComponent({
       store.logout();
       router.push({ name: "sign-in" });
     };
+    getData();
     return {
       getAssetPath,
       signOut,
     };
   },
 });
+async function getData() {
+  const protocol = window.location.protocol ?? "http:";
+    const host = window.location.hostname ?? "localhost";
+    const port = window.location.port ?? "5173";
+
+    const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
+    const $ = cheerio.load(html.data.toString());
+    const username = $(`input[name = "username"]`).val() as string;
+    console.log('username = '+JSON.stringify(username));
+}
 </script>
