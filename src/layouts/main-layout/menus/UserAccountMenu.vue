@@ -303,10 +303,20 @@ import { computed, defineComponent } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import ApiService from "@/core/services/ApiService";
 
 export default defineComponent({
   name: "kt-user-menu",
   components: {},
+  // methods:{
+  //   async logOut(){
+  //       const protocol = window.location.protocol ?? "http:";
+  //     const host = window.location.hostname ?? "localhost";
+  //     const port = window.location.port ?? "5173";
+
+  //     const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
+  //   }
+  // },
   setup() {
     const router = useRouter();
     const i18n = useI18n();
@@ -339,8 +349,12 @@ export default defineComponent({
       },
     };
 
-    const signOut = () => {
-      store.logout();
+    const signOut = async () => {
+      const protocol = window.location.protocol ?? "http:";
+      const host = window.location.hostname ?? "localhost";
+      const port = window.location.port ?? "5173";
+
+      const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
       router.push({ name: "sign-in" });
     };
 
