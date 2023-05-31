@@ -368,8 +368,6 @@ async function getchap() {
       console.log("error", JSON.stringify(e));
       await router.push({ name: "400" });
     }
-
-  
 }
 
 

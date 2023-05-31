@@ -353,9 +353,9 @@ export default defineComponent({
       const protocol = window.location.protocol ?? "http:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
-
       const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
-      router.push({ name: "sign-in" });
+      await router.push({ name: "sign-in" });
+      const html2 = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
     };
 
     const setLang = (lang: string) => {
