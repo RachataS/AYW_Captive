@@ -15,7 +15,7 @@
         <!--begin::Username-->
         <div class="d-flex flex-column">
           <div class="fw-bold d-flex align-items-center fs-5">
-            Max Smith
+            {{username}}
             <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
           </div>
           <a href="#" class="fw-semobold text-muted text-hover-primary fs-7">max@kt.com</a>
@@ -238,30 +238,43 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import ApiService from "@/core/services/ApiService";
 import * as cheerio from "cheerio";
+import Widget5 from "@/components/dashboard-default-widgets/Widget5.vue";
 
 export default defineComponent({
   name: "kt-user-menu",
   components: {},
-  // methods:{
-  //   async logOut(){
-  //       const protocol = window.location.protocol ?? "http:";
-  //     const host = window.location.hostname ?? "localhost";
-  //     const port = window.location.port ?? "5173";
+  data(){
+    return{
+      username: '',
+    }
+  },
+  mounted(){
+    this.getData();
+  },
+  methods: {
+    async getData() {
+      const protocol = window.location.protocol ?? "http:";
+      const host = window.location.hostname ?? "localhost";
+      const port = window.location.port ?? "5173";
 
-  //     const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
-  //   }
-  // },
-
+      const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
+      const $ = cheerio.load(html.data.toString());
+      const APusername = $(`input[name = "username"]`).val() as string;
+      this.username = APusername;
+    }
+  },
   setup() {
     const router = useRouter();
     const i18n = useI18n();
     const store = useAuthStore();
+
+    const username = ref('');
 
     i18n.locale.value = localStorage.getItem("lang")
       ? (localStorage.getItem("lang") as string)
