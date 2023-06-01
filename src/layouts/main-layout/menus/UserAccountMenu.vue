@@ -59,7 +59,7 @@
     <div
       class="menu-item px-5"
       data-kt-menu-trigger="hover"
-      data-kt-menu-placement="left-start"
+      data-kt-menu-placement="bottom-start"
       data-kt-menu-flip="center, top"
     >
     <div class="menu-link px-5">
@@ -154,7 +154,7 @@
     <div
       class="menu-item px-5"
       data-kt-menu-trigger="hover"
-      data-kt-menu-placement="left-start"
+      data-kt-menu-placement="bottom-start"
       data-kt-menu-flip="center, top"
     >
       <router-link to="/pages/profile/overview" class="menu-link px-5">
@@ -280,7 +280,7 @@
     <div
       class="menu-item px-5"
       data-kt-menu-trigger="hover"
-      data-kt-menu-placement="left-start"
+      data-kt-menu-placement="bottom-start"
       data-kt-menu-flip="center, top"
     >
       <devicePixelRatioz class="menu-link px-5">
