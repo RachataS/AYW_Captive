@@ -277,11 +277,6 @@
       </div>
       <!--end::Menu sub-->
     </div>
-    <!--end::Menu item-->
-
-    <!--begin::Menu item-->
-    
-    <!--begin::Menu item-->
     <div
       class="menu-item px-5"
       data-kt-menu-trigger="hover"
@@ -310,13 +305,6 @@
           </router-link>
         </div>
         <!--end::Menu item-->
-
-        <!--begin::Menu item-->
-        <div class="menu-item px-3">
-          <router-link to="/password-reset" class="menu-link px-5">
-            Reset password
-          </router-link>
-        </div>
 
         <!--end::Menu item-->
       </div>
