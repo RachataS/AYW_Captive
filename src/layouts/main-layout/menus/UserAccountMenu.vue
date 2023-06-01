@@ -2,8 +2,7 @@
   <!--begin::Menu-->
   <div
     class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semobold py-4 fs-6 w-275px"
-    data-kt-menu="true"
-  >
+    data-kt-menu="true">
     <!--begin::Menu item-->
     <div class="menu-item px-3">
       <div class="menu-content d-flex align-items-center px-3">
@@ -17,13 +16,9 @@
         <div class="d-flex flex-column">
           <div class="fw-bold d-flex align-items-center fs-5">
             Max Smith
-            <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2"
-              >Pro</span
-            >
+            <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
           </div>
-          <a href="#" class="fw-semobold text-muted text-hover-primary fs-7"
-            >max@kt.com</a
-          >
+          <a href="#" class="fw-semobold text-muted text-hover-primary fs-7">max@kt.com</a>
         </div>
         <!--end::Username-->
       </div>
@@ -47,25 +42,19 @@
       <router-link to="/pages/profile/overview" class="menu-link px-5">
         <span class="menu-text">My Projects</span>
         <span class="menu-badge">
-          <span class="badge badge-light-danger badge-circle fw-bold fs-7"
-            >3</span
-          >
+          <span class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
         </span>
       </router-link>
     </div>
     <!--end::Menu item-->
 
     <!--begin::Menu item-->
-    <div
-      class="menu-item px-5"
-      data-kt-menu-trigger="hover"
-      data-kt-menu-placement="bottom-start"
-      data-kt-menu-flip="center, top"
-    >
-    <div class="menu-link px-5">
+    <div class="menu-item px-5" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"
+      data-kt-menu-flip="center, top">
+      <div class="menu-link px-5">
         <span class="menu-title">My Subscription</span>
         <span class="menu-arrow"></span>
-    </div>
+      </div>
       <!--begin::Menu sub-->
       <div class="menu-sub menu-sub-dropdown w-175px py-4">
         <!--begin::Menu item-->
@@ -94,17 +83,10 @@
 
         <!--begin::Menu item-->
         <div class="menu-item px-3">
-          <router-link
-            to="/pages/profile/overview"
-            class="menu-link d-flex flex-stack px-5"
-          >
+          <router-link to="/pages/profile/overview" class="menu-link d-flex flex-stack px-5">
             Statements
 
-            <i
-              class="fas fa-exclamation-circle ms-2 fs-7"
-              data-bs-toggle="tooltip"
-              title="View your statements"
-            ></i>
+            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="View your statements"></i>
           </router-link>
         </div>
         <!--end::Menu item-->
@@ -116,16 +98,8 @@
         <!--begin::Menu item-->
         <div class="menu-item px-3">
           <div class="menu-content px-3">
-            <label
-              class="form-check form-switch form-check-custom form-check-solid"
-            >
-              <input
-                class="form-check-input w-30px h-20px"
-                type="checkbox"
-                value="1"
-                checked
-                name="notifications"
-              />
+            <label class="form-check form-switch form-check-custom form-check-solid">
+              <input class="form-check-input w-30px h-20px" type="checkbox" value="1" checked name="notifications" />
               <span class="form-check-label text-muted fs-7">
                 Notifications
               </span>
@@ -151,24 +125,14 @@
     <!--end::Menu separator-->
 
     <!--begin::Menu item-->
-    <div
-      class="menu-item px-5"
-      data-kt-menu-trigger="hover"
-      data-kt-menu-placement="bottom-start"
-      data-kt-menu-flip="center, top"
-    >
+    <div class="menu-item px-5" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"
+      data-kt-menu-flip="center, top">
       <router-link to="/pages/profile/overview" class="menu-link px-5">
         <span class="menu-title position-relative">
           Language
-          <span
-            class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0"
-          >
+          <span class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
             {{ currentLangugeLocale.name }}
-            <img
-              class="w-15px h-15px rounded-1 ms-2"
-              :src="currentLangugeLocale.flag"
-              alt="metronic"
-            />
+            <img class="w-15px h-15px rounded-1 ms-2" :src="currentLangugeLocale.flag" alt="metronic" />
           </span>
         </span>
       </router-link>
@@ -177,18 +141,9 @@
       <div class="menu-sub menu-sub-dropdown w-175px py-4">
         <!--begin::Menu item-->
         <div class="menu-item px-3">
-          <a
-            @click="setLang('en')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'en' }"
-          >
+          <a @click="setLang('en')" href="#" class="menu-link d-flex px-5" :class="{ active: currentLanguage === 'en' }">
             <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/united-states.svg')"
-                alt="metronic"
-              />
+              <img class="rounded-1" :src="getAssetPath('media/flags/united-states.svg')" alt="metronic" />
             </span>
             English
           </a>
@@ -197,18 +152,9 @@
 
         <!--begin::Menu item-->
         <div class="menu-item px-3">
-          <a
-            @click="setLang('es')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'es' }"
-          >
+          <a @click="setLang('es')" href="#" class="menu-link d-flex px-5" :class="{ active: currentLanguage === 'es' }">
             <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/spain.svg')"
-                alt="metronic"
-              />
+              <img class="rounded-1" :src="getAssetPath('media/flags/spain.svg')" alt="metronic" />
             </span>
             Spanish
           </a>
@@ -217,18 +163,9 @@
 
         <!--begin::Menu item-->
         <div class="menu-item px-3">
-          <a
-            @click="setLang('de')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'de' }"
-          >
+          <a @click="setLang('de')" href="#" class="menu-link d-flex px-5" :class="{ active: currentLanguage === 'de' }">
             <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/germany.svg')"
-                alt="metronic"
-              />
+              <img class="rounded-1" :src="getAssetPath('media/flags/germany.svg')" alt="metronic" />
             </span>
             German
           </a>
@@ -237,18 +174,9 @@
 
         <!--begin::Menu item-->
         <div class="menu-item px-3">
-          <a
-            @click="setLang('ja')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'ja' }"
-          >
+          <a @click="setLang('ja')" href="#" class="menu-link d-flex px-5" :class="{ active: currentLanguage === 'ja' }">
             <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/japan.svg')"
-                alt="metronic"
-              />
+              <img class="rounded-1" :src="getAssetPath('media/flags/japan.svg')" alt="metronic" />
             </span>
             Japanese
           </a>
@@ -257,18 +185,9 @@
 
         <!--begin::Menu item-->
         <div class="menu-item px-3">
-          <a
-            @click="setLang('fr')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'fr' }"
-          >
+          <a @click="setLang('fr')" href="#" class="menu-link d-flex px-5" :class="{ active: currentLanguage === 'fr' }">
             <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/france.svg')"
-                alt="metronic"
-              />
+              <img class="rounded-1" :src="getAssetPath('media/flags/france.svg')" alt="metronic" />
             </span>
             French
           </a>
@@ -277,12 +196,8 @@
       </div>
       <!--end::Menu sub-->
     </div>
-    <div
-      class="menu-item px-5"
-      data-kt-menu-trigger="hover"
-      data-kt-menu-placement="bottom-start"
-      data-kt-menu-flip="center, top"
-    >
+    <div class="menu-item px-5" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"
+      data-kt-menu-flip="center, top">
       <devicePixelRatioz class="menu-link px-5">
         <span class="menu-title">Account Settings</span>
         <span class="menu-arrow"></span>
@@ -328,6 +243,7 @@ import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import ApiService from "@/core/services/ApiService";
+import * as cheerio from "cheerio";
 
 export default defineComponent({
   name: "kt-user-menu",
@@ -341,6 +257,7 @@ export default defineComponent({
   //     const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
   //   }
   // },
+
   setup() {
     const router = useRouter();
     const i18n = useI18n();
@@ -377,9 +294,33 @@ export default defineComponent({
       const protocol = window.location.protocol ?? "http:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
-      const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
-      await router.push({ name: "sign-in" });
-      const html2 = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
+      let chapIdraw;
+      try {
+        const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
+        const $ = cheerio.load(html.data.toString());
+        chapIdraw = $(`input[name = "chap-id"]`).val() as string;
+        console.log(chapIdraw);
+      } catch (e) {
+        console.log("error = " + e)
+      }
+
+      do {
+        const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
+        new Promise(resolve => setTimeout(resolve, 10000));
+        if(chapIdraw !== "undefined"){
+          break;
+        }else {
+          continue;
+        }
+      }
+      while (1);
+     // new Promise(resolve => setTimeout(resolve, 10000));
+      if(chapIdraw !== 'undefined'){
+        await router.push({ name: "sign-in" });
+      }else{
+        console.log("wait...");
+      }
+      console.log(chapIdraw);
     };
 
     const setLang = (lang: string) => {
