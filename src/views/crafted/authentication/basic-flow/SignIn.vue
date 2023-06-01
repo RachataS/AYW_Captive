@@ -36,11 +36,11 @@
             <ErrorMessage name="username" />
           </div>
         </div>
-        <div class="d-flex flex-stack mb-2">
+<!--        <div class="d-flex flex-stack mb-2">
           <router-link to="/email-change" class="link-primary fs-6 fw-bold">
             Change Email?
           </router-link>
-        </div>
+        </div>-->
       </div>
       <!--end::Input group-->
 
@@ -59,14 +59,14 @@
             <ErrorMessage name="password" />
           </div>
         </div>
-        <div class="d-flex flex-stack mb-2">
+        <!--<div class="d-flex flex-stack mb-2">
           <router-link to="/password-reset" class="link-primary fs-6 fw-bold">
             Forgot Password ?
           </router-link>
           <router-link to="/password-change" class="link-primary fs-6 fw-bold">
             Change Password ?
           </router-link>
-        </div>
+        </div>-->
       </div>
       <!--end::Input group-->
       <div class="fv-row mb-10">

@@ -62,11 +62,10 @@
       data-kt-menu-placement="left-start"
       data-kt-menu-flip="center, top"
     >
-      <router-link to="/pages/profile/overview" class="menu-link px-5">
+    <div class="menu-link px-5">
         <span class="menu-title">My Subscription</span>
         <span class="menu-arrow"></span>
-      </router-link>
-
+    </div>
       <!--begin::Menu sub-->
       <div class="menu-sub menu-sub-dropdown w-175px py-4">
         <!--begin::Menu item-->
