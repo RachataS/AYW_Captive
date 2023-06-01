@@ -25,6 +25,8 @@ import Widget8 from "@/components/dashboard-default-widgets/Widget8.vue";
 import Widget9 from "@/components/dashboard-default-widgets/Widget9.vue";
 import Widget10 from "@/components/dashboard-default-widgets/Widget10.vue";
 import MixedWidget5 from "@/components/widgets/mixed/Widget5.vue";
+import ApiService from "@/core/services/ApiService";
+import * as cheerio from "cheerio";
 
 export default defineComponent({
   name: "main-dashboard",
