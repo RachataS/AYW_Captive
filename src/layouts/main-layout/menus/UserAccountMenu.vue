@@ -15,7 +15,7 @@
         <!--begin::Username-->
         <div class="d-flex flex-column">
           <div class="fw-bold d-flex align-items-center fs-5">
-            {{username}}
+            {{ username }}
             <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
           </div>
           <a href="#" class="fw-semobold text-muted text-hover-primary fs-7">max@kt.com</a>
@@ -249,12 +249,12 @@ import Widget5 from "@/components/dashboard-default-widgets/Widget5.vue";
 export default defineComponent({
   name: "kt-user-menu",
   components: {},
-  data(){
-    return{
+  data() {
+    return {
       username: '',
     }
   },
-  mounted(){
+  mounted() {
     this.getData();
   },
   methods: {
@@ -310,30 +310,24 @@ export default defineComponent({
       let chapIdraw;
       try {
         const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
-        const $ = cheerio.load(html.data.toString());
-        chapIdraw = $(`input[name = "chap-id"]`).val() as string;
-        console.log(chapIdraw);
+          const $ = cheerio.load(html.data.toString());
+          chapIdraw = $(`input[name = "chap-id"]`).val() as string;
       } catch (e) {
         console.log("error = " + e)
-      }
-
-      do {
-        const html = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
-        new Promise(resolve => setTimeout(resolve, 10000));
-        if(chapIdraw !== "undefined"){
-          break;
-        }else {
-          continue;
+      } do {
+          const html2 = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
+          window.location.reload();
+          new Promise(resolve => setTimeout(resolve, 10000));
+          console.log("in loop =", chapIdraw);
+          if (chapIdraw !== 'undefined') {
+            console.log("go sign in =", chapIdraw);
+            await router.push({ name: "sign-in" });
+          } else {
+            console.log("wait...");
+          }
+          console.log("out of loop = ", chapIdraw);
         }
-      }
-      while (1);
-     // new Promise(resolve => setTimeout(resolve, 10000));
-      if(chapIdraw !== 'undefined'){
-        await router.push({ name: "sign-in" });
-      }else{
-        console.log("wait...");
-      }
-      console.log(chapIdraw);
+        while (1);
     };
 
     const setLang = (lang: string) => {
