@@ -68,8 +68,21 @@ export default defineComponent({
   },
   mounted() {
     this.getData();
+    this.startAutoRefresh();
   },
   methods: {
+   async startAutoRefresh() {
+      setInterval(() => {
+        this.getData();
+      }, 60000);
+    //   for (let i = 0;i<62;i++){
+    //   await new Promise(resolve => setTimeout(resolve, 1000));
+    //     if (i === 61){
+    //       i = 0;
+    //     }
+    //   console.log(i);
+    // };
+    },
     async getData() {
       const protocol = window.location.protocol ?? "http:";
       const host = window.location.hostname ?? "localhost";
@@ -87,7 +100,7 @@ export default defineComponent({
       this.bytein = APbytein;
       this.byteout = APbyteout;
       this.uptime = APuptime;
-    }
+    },
   },
   setup() {
     const router = useRouter();
