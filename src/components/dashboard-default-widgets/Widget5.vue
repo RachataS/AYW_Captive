@@ -74,7 +74,7 @@ export default defineComponent({
    async startAutoRefresh() {
       setInterval(() => {
         this.getData();
-      }, 60000);
+      }, 600000);
     //   for (let i = 0;i<62;i++){
     //   await new Promise(resolve => setTimeout(resolve, 1000));
     //     if (i === 61){
