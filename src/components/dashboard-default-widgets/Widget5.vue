@@ -105,6 +105,9 @@ export default defineComponent({
       getAssetPath,
       signOut,
     };
+    
   },
-});
+}
+);
+
 </script>
