@@ -106,7 +106,7 @@
           </span>
         </button>
 
-        <router-link to="/sign-up" class="btn btn-lg btn-light-primary fw-bold"
+        <router-link to="/dashboard" class="btn btn-lg btn-light-primary fw-bold"
           >Cancel</router-link
         >
       </div>

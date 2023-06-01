@@ -62,7 +62,7 @@
           </span>
         </button>
 
-        <router-link to="/sign-up" class="btn btn-lg btn-light-primary fw-bold">Cancel</router-link>
+        <router-link to="/dashboard" class="btn btn-lg btn-light-primary fw-bold">Cancel</router-link>
       </div>
       <!--end::Actions-->
     </VForm>
