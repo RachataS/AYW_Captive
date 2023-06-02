@@ -43,6 +43,26 @@ export default defineComponent({
     Widget10,
     MixedWidget5,
   },
+  methods:{
+    // async getData() {
+    //   const protocol = window.location.protocol ?? "http:";
+    //   const host = window.location.hostname ?? "localhost";
+    //   const port = window.location.port ?? "5173";
+
+    //   const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
+    //   const $ = cheerio.load(html.data.toString());
+    //   const APusername = $(`input[name = "username"]`).val() as string;
+    //   const APip = $(`input[name = "ip"]`).val() as string;
+    //   const APbytein = $(`input[name = "bytes-in-nice"]`).val() as string;
+    //   const APbyteout = $(`input[name = "bytes-out-nice"]`).val() as string;
+    //   const APuptime = $(`input[name = "uptime"]`).val() as string;
+    //   this.username = APusername;
+    //   this.ip = APip;
+    //   this.bytein = APbytein;
+    //   this.byteout = APbyteout;
+    //   this.uptime = APuptime;
+    // },
+  },
   setup() {
     return {
       getAssetPath,

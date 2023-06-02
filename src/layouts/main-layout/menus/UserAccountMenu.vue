@@ -307,27 +307,25 @@ export default defineComponent({
       const protocol = window.location.protocol ?? "http:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
-      let chapIdraw;
+      let chapIdraw: string | undefined = undefined;
+
+      const html2 = await ApiService.get(`${protocol}//${host}:${port}`,`apapi/logout`);
+
+      do {
       try {
-        const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
+        const html2 = await ApiService.get(`${protocol}//${host}:${port}`,`apapi/logout`);
+        const html = await ApiService.get(`${protocol}//${host}:${port}`,`apapi/status`);
           const $ = cheerio.load(html.data.toString());
           chapIdraw = $(`input[name = "chap-id"]`).val() as string;
       } catch (e) {
         console.log("error = " + e)
-      } do {
-          const html2 = await ApiService.get(`${protocol}//${host}:${port}`, "logout");
-          window.location.reload();
+        break;
+      } 
           new Promise(resolve => setTimeout(resolve, 10000));
           console.log("in loop =", chapIdraw);
-          if (chapIdraw !== 'undefined') {
-            console.log("go sign in =", chapIdraw);
-            await router.push({ name: "sign-in" });
-          } else {
-            console.log("wait...");
-          }
-          console.log("out of loop = ", chapIdraw);
         }
-        while (1);
+        while (chapIdraw === 'undefined');
+        await router.push({name:"sign-in"})
     };
 
     const setLang = (lang: string) => {

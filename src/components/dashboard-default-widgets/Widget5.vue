@@ -49,7 +49,6 @@ import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import ApiService from "@/core/services/ApiService";
 import * as cheerio from "cheerio";
-import UserAccountMenu from "@/layouts/main-layout/menus/UserAccountMenu.vue";
 
 export default defineComponent({
   name: "default-dashboard-widget-5",
@@ -88,28 +87,18 @@ export default defineComponent({
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
 
-      const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
+      const html = await ApiService.get(`${protocol}//${host}:${port}`, "apapi/status");
       const $ = cheerio.load(html.data.toString());
-      const APusername = $(`input[name = "username"]`).val() as string;
-      const APip = $(`input[name = "ip"]`).val() as string;
-      const APbytein = $(`input[name = "bytes-in-nice"]`).val() as string;
-      const APbyteout = $(`input[name = "bytes-out-nice"]`).val() as string;
-      const APuptime = $(`input[name = "uptime"]`).val() as string;
-      this.username = APusername;
-      this.ip = APip;
-      this.bytein = APbytein;
-      this.byteout = APbyteout;
-      this.uptime = APuptime;
+      this.username = $(`input[name = "username"]`).val() as string;
+      this.ip = $(`input[name = "ip"]`).val() as string;
+      this.bytein = $(`input[name = "bytes-in-nice"]`).val() as string;
+      this.byteout = $(`input[name = "bytes-out-nice"]`).val() as string;
+      this.uptime = $(`input[name = "uptime"]`).val() as string;
     },
   },
   setup() {
     const router = useRouter();
     const store = useAuthStore();
-    const username = ref('');
-    const ip = ref('');
-    const bytein = ref('');
-    const uptime = ref('');
-    const byteout = ref('');
     const signOut = () => {
       store.logout();
       router.push({ name: "sign-in" });

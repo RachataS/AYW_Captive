@@ -29,7 +29,7 @@
 
         <!--begin::Input-->
         <Field tabindex="1" class="form-control form-control-lg form-control-solid" type="text" name="username"
-          autocomplete="off" v-model="username" />
+          autocomplete="off"/>
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -52,7 +52,7 @@
           <label class="form-label fw-bold text-dark fs-6 mb-0">Password</label>
         </div>
         <Field tabindex="2" class="form-control form-control-lg form-control-solid" type="password" name="password"
-          autocomplete="off" v-model="password" />
+          autocomplete="off" />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
@@ -144,18 +144,9 @@ export default defineComponent({
     VForm,
     ErrorMessage,
   },
-  data() {
-    return {
-      username: "",
-      password: "",
-    }
-  },
   setup() {
     const store = useAuthStore();
     const router = useRouter();
-
-    const username = ref('');
-    const password = ref('');
 
     const submitButton = ref<HTMLButtonElement | null>(null);
 
@@ -168,16 +159,19 @@ export default defineComponent({
     //Form submit function
     const onSubmitLogin = async (values: any) => {
       let errorRaw;
+      const protocol = window.location.protocol ?? "http:";
+    const host = window.location.hostname ?? "localhost";
+    const port = window.location.port ?? "5173";
 
       console.log(`value = ${JSON.stringify(values)}`);
       const passwordEncoded = md5.hexMD5(
-        chapID.value + password.value + chapChallenge.value
+        chapID.value + values.password + chapChallenge.value
       );
       console.log('password encoded = ' + passwordEncoded);
       try {
-        let html = await ApiService.vueInstance.axios.post(`http://localhost:5173/login`,
+        let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
           {
-            username: username.value,
+            username: values.username,
             password: passwordEncoded,
             dst: "",
             popup: true,
@@ -321,10 +315,7 @@ export default defineComponent({
       login,
       submitButton,
       getAssetPath,
-      username,
-      password,
     }
-
   },
 
   async mounted() {
@@ -338,7 +329,7 @@ async function getchap() {
     const port = window.location.port ?? "5173";
 
     try {
-      const html = await ApiService.get(`${protocol}//${host}:${port}`, "login");
+      const html = await ApiService.get(`${protocol}//${host}:${port}/apapi/login`);
       const $ = cheerio.load(html.data.toString());
       const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
       console.log("chapIDRaw = " + JSON.stringify(chapIdraw));

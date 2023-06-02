@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { Server } from "node:http";
+import path from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,21 +20,13 @@ export default defineConfig({
   },
   server : {
     proxy:{
-      "/login":{
+      "/apapi":{
         target: "http://AYW-test.wifi",
         changeOrigin:true,
         secure:false,
+        followRedirects:true,
+        rewrite:(path)=>path.replace(/^\/apapi/,""),
       },
-      "/status":{
-        target: "http://AYW-test.wifi",
-        changeOrigin:true,
-        secure:false,
-      },
-      "/logout":{
-        target: "http://AYW-test.wifi",
-        changeOrigin:true,
-        secure:false,
-      }
     }
   }
 },
