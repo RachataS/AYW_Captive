@@ -4,7 +4,7 @@
     <div
       class="card-body d-flex flex-column justify-content-between mt-9 bgi-no-repeat bgi-size-cover bgi-position-x-center pb-0"
       :style="`background-position: 100% 50%;
-                                                background-image: url('${getAssetPath(
+                                                                background-image: url('${getAssetPath(
         '/media/stock/900x600/42.png'
       )}');`">
       <!--begin::Wrapper-->
@@ -21,9 +21,9 @@
               <hr>
             </h1>
             <h4 style="font-size: large;">
-              IP address is {{ip}}
+              IP address is {{ ip }}
               <hr>
-              You're connect this network for {{ uptime }}
+              You're connect this network for {{ getUptimeMin(uptime) }}
               <hr>
               Byte in : {{ bytein }} / Byte out : {{ byteout }}
               <hr>
@@ -53,47 +53,21 @@ import * as cheerio from "cheerio";
 export default defineComponent({
   name: "default-dashboard-widget-5",
   components: {},
-  data() {
-    return {
-      username: '',
-      ip: '',
-      bytein: '',
-      byteout: '',
-      uptime: '',
-    };
-  },
   props: {
     className: { type: String, required: false },
+    username:{type: String, required: false},
+    ip:{type: String, required: false},
+    bytein:{type: String, required: false},
+    byteout:{type: String, required: false},
+    uptime:{type: String, required: false}
   },
   mounted() {
-    this.getData();
-    this.startAutoRefresh();
   },
   methods: {
-   async startAutoRefresh() {
-      setInterval(() => {
-        this.getData();
-      }, 60000);
-    //   for (let i = 0;i<62;i++){
-    //   await new Promise(resolve => setTimeout(resolve, 1000));
-    //     if (i === 61){
-    //       i = 0;
-    //     }
-    //   console.log(i);
-    // };
-    },
-    async getData() {
-      const protocol = window.location.protocol ?? "http:";
-      const host = window.location.hostname ?? "localhost";
-      const port = window.location.port ?? "5173";
-
-      const html = await ApiService.get(`${protocol}//${host}:${port}`, "apapi/status");
-      const $ = cheerio.load(html.data.toString());
-      this.username = $(`input[name = "username"]`).val() as string;
-      this.ip = $(`input[name = "ip"]`).val() as string;
-      this.bytein = $(`input[name = "bytes-in-nice"]`).val() as string;
-      this.byteout = $(`input[name = "bytes-out-nice"]`).val() as string;
-      this.uptime = $(`input[name = "uptime"]`).val() as string;
+    getUptimeMin(uptime) {
+      const uptimemin = uptime.replace(/(\d+s)$/, "");
+      if (uptimemin === "") return "0m";
+      return uptimemin;
     },
   },
   setup() {
@@ -107,7 +81,7 @@ export default defineComponent({
       getAssetPath,
       signOut,
     };
-    
+
   },
 }
 );

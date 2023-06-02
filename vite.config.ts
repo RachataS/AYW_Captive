@@ -20,11 +20,12 @@ export default defineConfig({
   },
   server : {
     proxy:{
-      "/apapi":{
+      "^/apapi/.*":{
         target: "http://AYW-test.wifi",
         changeOrigin:true,
         secure:false,
         followRedirects:true,
+        timeout:10000,
         rewrite:(path)=>path.replace(/^\/apapi/,""),
       },
     }

@@ -4,7 +4,13 @@
     <div class="col-xxl-3"></div>
     <!--begin::Col-->
     <div class="col-xxl-6">
-      <Widget5 className="h-md-100" />
+      <Widget5 className="h-md-100" 
+      :username = "username"
+      :ip = "ip"
+      :bytein = "bytein"
+      :byteout="byteout"
+      :uptime = "uptime"
+      />
     </div>
     <!--end::Col-->
     <div class="col-xxl-3"></div>
@@ -44,25 +50,53 @@ export default defineComponent({
     Widget10,
     MixedWidget5,
   },
-  methods:{
-    // async getData() {
-    //   const protocol = window.location.protocol ?? "http:";
-    //   const host = window.location.hostname ?? "localhost";
-    //   const port = window.location.port ?? "5173";
+  data() {
+    return {
+      username: '',
+      ip: '',
+      bytein: '',
+      byteout: '',
+      uptime: '',
+    };
+  },
+  mounted() {
+    this.getData();
+    this.startAutoRefresh();
+    
+  },
+  methods: {
+    getUptimeMin(uptime) {
+      const uptimemin = uptime.replace(/(\d+s)$/, "");
+      if (uptimemin === "") return "0m";
+      return uptimemin;
+    },
+    async startAutoRefresh() {
+      setInterval(() => {
+        this.getData();
+      }, 60000);
+      //   for (let i = 0;i<62;i++){
+      //   await new Promise(resolve => setTimeout(resolve, 1000));
+      //     if (i === 61){
+      //       i = 0;
+      //     }
+      //   console.log(i);
+      // };
+    },
+    async getData() {
+      const protocol = window.location.protocol ?? "http:";
+      const host = window.location.hostname ?? "localhost";
+      const port = window.location.port ?? "5173";
 
-    //   const html = await ApiService.get(`${protocol}//${host}:${port}`, "status");
-    //   const $ = cheerio.load(html.data.toString());
-    //   const APusername = $(`input[name = "username"]`).val() as string;
-    //   const APip = $(`input[name = "ip"]`).val() as string;
-    //   const APbytein = $(`input[name = "bytes-in-nice"]`).val() as string;
-    //   const APbyteout = $(`input[name = "bytes-out-nice"]`).val() as string;
-    //   const APuptime = $(`input[name = "uptime"]`).val() as string;
-    //   this.username = APusername;
-    //   this.ip = APip;
-    //   this.bytein = APbytein;
-    //   this.byteout = APbyteout;
-    //   this.uptime = APuptime;
-    // },
+      const html = await ApiService.get(`${protocol}//${host}:${port}`, "apapi/status");
+      const $ = cheerio.load(html.data.toString());
+      this.username = $(`input[name = "username"]`).val() as string;
+      console.log(this.username);
+      this.ip = $(`input[name = "ip"]`).val() as string;
+      console.log(this.ip);
+      this.bytein = $(`input[name = "bytes-in-nice"]`).val() as string;
+      this.byteout = $(`input[name = "bytes-out-nice"]`).val() as string;
+      this.uptime = $(`input[name = "uptime"]`).val() as string;
+    },
   },
   setup() {
     return {

@@ -329,7 +329,7 @@ async function getchap() {
     const port = window.location.port ?? "5173";
 
     try {
-      const html = await ApiService.get(`${protocol}//${host}:${port}/apapi/login`);
+      const html = await ApiService.get(`${protocol}//${host}:${port}`,`apapi/login`);
       const $ = cheerio.load(html.data.toString());
       const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
       console.log("chapIDRaw = " + JSON.stringify(chapIdraw));
