@@ -1,12 +1,13 @@
 <template>
   <!--begin::Row-->
   <div class="row g-5 g-xl-10 mb-5 mb-xl-10">
-
+    <div class="col-xxl-3"></div>
     <!--begin::Col-->
-    <div class="col-xxl-8">
+    <div class="col-xxl-6">
       <Widget5 className="h-md-100" />
     </div>
     <!--end::Col-->
+    <div class="col-xxl-3"></div>
   </div>
   
 </template>
