@@ -91,10 +91,11 @@
         <!--end::Separator-->
 
         <!--begin::Google link-->
-        <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-          <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
-          Continue with Google
-        </a>
+        <a :href="getGoogleUrl()" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+  <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
+  Continue with Google
+</a>
+
 
         <!--end::Google link-->
 
@@ -132,7 +133,7 @@ import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
-
+import { getGoogleUrl } from "@/utils/getGoogleUrl";
 
 const chapID = ref("");
 const chapChallenge = ref("");
@@ -143,6 +144,9 @@ export default defineComponent({
     Field,
     VForm,
     ErrorMessage,
+  },
+  methods:{
+    getGoogleUrl,
   },
   setup() {
     const store = useAuthStore();
