@@ -265,53 +265,6 @@ export default defineComponent({
       } catch (e) {
         await router.push({ name: "400" });
       }
-
-      // values = values as User;
-      // // Clear existing errors
-      // store.logout();
-
-      // if (submitButton.value) {
-      //   // eslint-disable-next-line
-      //   submitButton.value!.disabled = true;
-      //   // Activate indicator
-      //   submitButton.value.setAttribute("data-kt-indicator", "on");
-      // }
-
-      // Send login request
-      // await store.login(values);
-      // if (errorRaw === "undefined") {
-      //   Swal.fire({
-      //     text: "You have successfully logged in!",
-      //     icon: "success",
-      //     buttonsStyling: false,
-      //     confirmButtonText: "Ok, got it!",
-      //     heightAuto: false,
-      //     customClass: {
-      //       confirmButton: "btn fw-semobold btn-light-primary",
-      //     },
-      //   }).then(() => {
-      //     // Go to page after successfully login
-      //     router.push({ name: "dashboard" });
-      //   });
-      // } else {
-      //   Swal.fire({
-      //     html: `Error! <br>${errorRaw}`,
-      //     icon: "error",
-      //     buttonsStyling: false,
-      //     confirmButtonText: "Try again!",
-      //     heightAuto: false,
-      //     customClass: {
-      //       confirmButton: "btn fw-semobold btn-light-danger",
-      //     },
-      //   }).then(() => {
-      //     store.errors = {};
-      //   });
-      // }
-
-      // //Deactivate indicator
-      // submitButton.value?.removeAttribute("data-kt-indicator");
-      // // eslint-disable-next-line
-      // submitButton.value!.disabled = false;
     };
 
     return {
@@ -361,7 +314,7 @@ async function getchap() {
     }
     catch (e) {
       console.log("error", JSON.stringify(e));
-      await router.push({ name: "400" });
+    //  await router.push({ name: "400" });
     }
 }
 
