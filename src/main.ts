@@ -16,10 +16,18 @@ import { initApexCharts } from "@/core/plugins/apexcharts";
 import { initInlineSvg } from "@/core/plugins/inline-svg";
 import { initVeeValidate } from "@/core/plugins/vee-validate";
 import { initKtIcon } from "@/core/plugins/keenthemes";
+import vue3GoogleLogin from 'vue3-google-login';
 
 import "@/core/plugins/prismjs";
 
 const app = createApp(App);
+
+const CLIENTID = '293355955327-cembg3d0scgvgja782boie1840fj2s3l.apps.googleusercontent.com'
+
+app.use(vue3GoogleLogin, {
+  clientId: CLIENTID,
+});
+
 
 app.use(createPinia());
 app.use(router);

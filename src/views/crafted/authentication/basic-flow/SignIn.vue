@@ -29,14 +29,14 @@
 
         <!--begin::Input-->
         <Field tabindex="1" class="form-control form-control-lg form-control-solid" type="text" name="username"
-          autocomplete="off"/>
+          autocomplete="off" />
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
             <ErrorMessage name="username" />
           </div>
         </div>
-<!--        <div class="d-flex flex-stack mb-2">
+        <!--        <div class="d-flex flex-stack mb-2">
           <router-link to="/email-change" class="link-primary fs-6 fw-bold">
             Change Email?
           </router-link>
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="d-flex flex-stack mb-2">
-         <!--<router-link to="/password-reset" class="link-primary fs-6 fw-bold">
+          <!--<router-link to="/password-reset" class="link-primary fs-6 fw-bold">
             Forgot Password ?
           </router-link>-->
           <router-link to="/password-change" class="link-primary fs-6 fw-bold">
@@ -92,9 +92,11 @@
 
         <!--begin::Google link-->
         <a :href="getGoogleUrl()" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-  <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
-  Continue with Google
-</a>
+          <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
+          Continue with Google
+        </a>
+
+        <GoogleLogin :callback="callback" prompt auto-login />
 
 
         <!--end::Google link-->
@@ -134,6 +136,7 @@ import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
 import { getGoogleUrl } from "@/utils/getGoogleUrl";
+import { decodeCredential } from 'vue3-google-login'
 
 const chapID = ref("");
 const chapChallenge = ref("");
@@ -145,9 +148,19 @@ export default defineComponent({
     VForm,
     ErrorMessage,
   },
-  methods:{
+  methods: {
     getGoogleUrl,
 
+  },
+  data() {
+    return {
+      callback: (response) => {
+        console.log("login success");
+        console.log(response);
+        let GoogleUser = decodeCredential(response.credential);
+        console.log(GoogleUser);
+      }
+    }
   },
   setup() {
     const store = useAuthStore();
@@ -167,8 +180,8 @@ export default defineComponent({
     const onSubmitLogin = async (values: any) => {
       let errorRaw;
       const protocol = window.location.protocol ?? "http:";
-    const host = window.location.hostname ?? "localhost";
-    const port = window.location.port ?? "5173";
+      const host = window.location.hostname ?? "localhost";
+      const port = window.location.port ?? "5173";
 
       console.log(`value = ${JSON.stringify(values)}`);
       const passwordEncoded = md5.hexMD5(
@@ -199,18 +212,18 @@ export default defineComponent({
           console.log("chapIDRaw = " + JSON.stringify(chapIdraw));
           if (typeof chapIdraw === "undefined") {
             Swal.fire({
-          text: "You have successfully logged in!",
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok, got it!",
-          heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semobold btn-light-primary",
-          },
-        }).then(() => {
-          // Go to page after successfully login
-          router.push({ name: "dashboard" });
-        });
+              text: "You have successfully logged in!",
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-primary",
+              },
+            }).then(() => {
+              // Go to page after successfully login
+              router.push({ name: "dashboard" });
+            });
           } else {
             Swal.fire({
               html: `Error! <br>${errorRaw}`,
@@ -286,40 +299,40 @@ export default defineComponent({
 
 async function getchap() {
   const protocol = window.location.protocol ?? "http:";
-    const host = window.location.hostname ?? "localhost";
-    const port = window.location.port ?? "5173";
+  const host = window.location.hostname ?? "localhost";
+  const port = window.location.port ?? "5173";
 
-    try {
-      const html = await ApiService.get(`${protocol}//${host}:${port}`,`apapi/login`);
-      const $ = cheerio.load(html.data.toString());
-      const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
-      console.log("chapIDRaw = " + JSON.stringify(chapIdraw));
-      if (typeof chapIdraw === "undefined") {
-        await router.push({ name: "dashboard" })
-        return;
-      }
-      const chapIdOctals = chapIdraw.split("\\");
-      const chapIdCode = parseInt(chapIdOctals[1], 8);
-      chapID.value = String.fromCharCode(chapIdCode);
-
-      const chapChallengeRaw = $(
-        'input[name = "chap-challenge"]'
-      ).val() as string;
-
-      const chapChallengeOctals = chapChallengeRaw.split("\\");
-      const chapChallengeCodes = [] as number[];
-      for (let i = 1; i < chapChallengeOctals.length; i++) {
-        const code = parseInt(chapChallengeOctals[i], 8);
-        chapChallengeCodes.push(code);
-      }
-      chapChallenge.value = String.fromCharCode(...chapChallengeCodes);
-      console.log("chap id = " + chapIdraw);
-      console.log("chap challenge = " + chapChallengeRaw);
+  try {
+    const html = await ApiService.get(`${protocol}//${host}:${port}`, `apapi/login`);
+    const $ = cheerio.load(html.data.toString());
+    const chapIdraw = $(`input[name = "chap-id"]`).val() as string;
+    console.log("chapIDRaw = " + JSON.stringify(chapIdraw));
+    if (typeof chapIdraw === "undefined") {
+      await router.push({ name: "dashboard" })
+      return;
     }
-    catch (e) {
-      console.log("error", JSON.stringify(e));
+    const chapIdOctals = chapIdraw.split("\\");
+    const chapIdCode = parseInt(chapIdOctals[1], 8);
+    chapID.value = String.fromCharCode(chapIdCode);
+
+    const chapChallengeRaw = $(
+      'input[name = "chap-challenge"]'
+    ).val() as string;
+
+    const chapChallengeOctals = chapChallengeRaw.split("\\");
+    const chapChallengeCodes = [] as number[];
+    for (let i = 1; i < chapChallengeOctals.length; i++) {
+      const code = parseInt(chapChallengeOctals[i], 8);
+      chapChallengeCodes.push(code);
+    }
+    chapChallenge.value = String.fromCharCode(...chapChallengeCodes);
+    console.log("chap id = " + chapIdraw);
+    console.log("chap challenge = " + chapChallengeRaw);
+  }
+  catch (e) {
+    console.log("error", JSON.stringify(e));
     //  await router.push({ name: "400" });
-    }
+  }
 }
 
 
