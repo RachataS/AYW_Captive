@@ -150,16 +150,54 @@ export default defineComponent({
   },
   methods: {
     getGoogleUrl,
+    callback: async (response) => {
+      const protocol = window.location.protocol ?? "http:";
+      const host = window.location.hostname ?? "localhost";
+      const port = window.location.port ?? "5173";
 
-  },
-  data() {
-    return {
-      callback: (response) => {
-        console.log("login success");
-        console.log(response);
-        let GoogleUser = decodeCredential(response.credential);
-        console.log(GoogleUser);
-      }
+      const password = 'GoogleLoginCaptive';
+
+      let errorData;
+      let errorStatus = 200;
+
+      const passwordEncoded = md5.hexMD5(
+        chapID.value + password + chapChallenge.value
+      );
+
+      console.log("login success");
+      console.log(response);
+      const GoogleUser = decodeCredential(response.credential);
+      console.log(GoogleUser);
+      console.log(GoogleUser.given_name);
+
+      const data = await ApiService.post("http://202.129.16.94:82/api/register",
+        {
+          username: GoogleUser.given_name,
+          email: GoogleUser.email,
+          password: password
+        }
+      ).catch((error) => {
+        errorData = error.response.data.error;
+        errorStatus = error.response.status;
+      });
+      console.log("data = " + JSON.stringify(data));
+
+      // try{
+      //   let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
+      //   {
+      //     username:GoogleUser.name,
+      //     password: passwordEncoded,
+      //     dst: "",
+      //     popup: true,
+      //   },
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/x-www-form-urlencoded",
+      //     },
+      //     withCredentials: false,
+      //   }
+      // );
+      // }catch(e){}
     }
   },
   setup() {

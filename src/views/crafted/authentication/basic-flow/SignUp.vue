@@ -195,56 +195,6 @@ export default defineComponent({
           },
         });
       }
-
-
-      // values = values as User;
-
-      // // Clear existing errors
-      // store.logout();
-
-      // // eslint-disable-next-line
-      // submitButton.value!.disabled = true;
-
-      // // Activate indicator
-      // submitButton.value?.setAttribute("data-kt-indicator", "on");
-
-      // // Send login request
-      // await store.register(values);
-
-      // const error = Object.values(store.errors);
-
-      // //console.log("username = ",this.username,"\nEmail = ",email);
-
-      // if (!error) {
-      //   Swal.fire({
-      //     text: "You have successfully logged in!",
-      //     icon: "success",
-      //     buttonsStyling: false,
-      //     confirmButtonText: "Ok, got it!",
-      //     heightAuto: false,
-      //     customClass: {
-      //       confirmButton: "btn fw-semobold btn-light-primary",
-      //     },
-      //   }).then(function () {
-      //     // Go to page after successfully login
-      //     router.push({ name: "dashboard" });
-      //   });
-      // } else {
-      //   Swal.fire({
-      //     text: error[0] as string,
-      //     icon: "error",
-      //     buttonsStyling: false,
-      //     confirmButtonText: "Try again!",
-      //     heightAuto: false,
-      //     customClass: {
-      //       confirmButton: "btn fw-semobold btn-light-danger",
-      //     },
-      //   });
-      // }
-
-      // submitButton.value?.removeAttribute("data-kt-indicator");
-      // // eslint-disable-next-line
-      // submitButton.value!.disabled = false;
     };
 
     return {
