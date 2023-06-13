@@ -122,7 +122,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, ref } from "vue";
+import { defineComponent, inject, ref } from "vue";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import { useAuthStore, type User } from "@/stores/auth";
 import { useRouter } from "vue-router";
@@ -147,10 +147,13 @@ export default defineComponent({
   },
   methods:{
     getGoogleUrl,
+
   },
   setup() {
     const store = useAuthStore();
     const router = useRouter();
+    const Vue3GoogleOauth = inject('Vue3GoogleOauth');
+
 
     const submitButton = ref<HTMLButtonElement | null>(null);
 
@@ -272,6 +275,7 @@ export default defineComponent({
       login,
       submitButton,
       getAssetPath,
+      Vue3GoogleOauth,
     }
   },
 
