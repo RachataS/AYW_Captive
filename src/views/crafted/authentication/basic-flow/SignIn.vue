@@ -171,33 +171,44 @@ export default defineComponent({
       console.log(GoogleUser.given_name);
 
       const data = await ApiService.post("http://202.129.16.94:82/api/register",
-        {
-          username: GoogleUser.given_name,
-          email: GoogleUser.email,
-          password: password
-        }
-      ).catch((error) => {
-        errorData = error.response.data.error;
-        errorStatus = error.response.status;
-      });
-      console.log("data = " + JSON.stringify(data));
+          {
+            username: GoogleUser.given_name,
+            email: GoogleUser.email,
+            password: password
+          }
+        ).catch((error) => {
+          errorData = error.response.data.error;
+          errorStatus = error.response.status;
+        });
+        console.log("data = " + JSON.stringify(data));
 
-      // try{
-      //   let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
-      //   {
-      //     username:GoogleUser.name,
-      //     password: passwordEncoded,
-      //     dst: "",
-      //     popup: true,
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/x-www-form-urlencoded",
-      //     },
-      //     withCredentials: false,
-      //   }
-      // );
-      // }catch(e){}
+      if(errorStatus === 200) {
+        Swal.fire({
+          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok and copy",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        }).then(function () {
+          navigator.clipboard.writeText(`${password.value}`);
+          router.push({ name: "dashboard" });
+        }
+        );
+      } else {
+        Swal.fire({
+          html:`${errorStatus}<br>${errorData}`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again!",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-danger",
+          },
+        });
+      }
     }
   },
   setup() {

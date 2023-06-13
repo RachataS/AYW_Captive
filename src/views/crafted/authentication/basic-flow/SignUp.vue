@@ -169,7 +169,7 @@ export default defineComponent({
 
       if (errorStatus === 200) {
         Swal.fire({
-          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to copy password<--`,
+          html: `You have create account successfully!<br>Your password is ${password.value}<br>--> Click OK to copy password<--`,
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok and copy",
@@ -179,7 +179,7 @@ export default defineComponent({
           },
         }).then(function () {
           navigator.clipboard.writeText(`${password.value}`);
-          router.push({ name: "dashboard" });
+          router.push({ name: "sign-in" });
         }
         );
 
