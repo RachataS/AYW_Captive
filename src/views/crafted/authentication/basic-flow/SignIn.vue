@@ -183,22 +183,77 @@ export default defineComponent({
         console.log("data = " + JSON.stringify(data));
 
       if(errorStatus === 200) {
+        try{
+        let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
+        {
+          username:GoogleUser.given_name,
+          password: passwordEncoded,
+          dst: "",
+          popup: true,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          withCredentials: false,
+        }
+      );
+      }catch (e) {
+        await router.push({ name: "400" });
+      }
+
         Swal.fire({
           html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
           icon: "success",
           buttonsStyling: false,
-          confirmButtonText: "Ok and copy",
+          confirmButtonText: "Ok",
           heightAuto: false,
           customClass: {
             confirmButton: "btn fw-semobold btn-light-primary",
           },
-        }).then(function () {
-          navigator.clipboard.writeText(`${password.value}`);
-          router.push({ name: "dashboard" });
-        }
-        );
+        }).then(() => {
+              // Go to page after successfully login
+              router.push({ name: "dashboard" });});
+        window.location.reload();
       } else {
+       if(errorStatus === 400){
+        try{
+        let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
+        {
+          username:GoogleUser.given_name,
+          password: passwordEncoded,
+          dst: "",
+          popup: true,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          withCredentials: false,
+        }
+      );
+      }catch (e) {
+        await router.push({ name: "400" });
+      }
+
         Swal.fire({
+          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        }).then(() => {
+              // Go to page after successfully login
+              router.push({ name: "dashboard" });
+            }
+        
+        );
+        window.location.reload();
+       }
+        else{ Swal.fire({
           html:`${errorStatus}<br>${errorData}`,
           icon: "error",
           buttonsStyling: false,
@@ -207,7 +262,7 @@ export default defineComponent({
           customClass: {
             confirmButton: "btn fw-semobold btn-light-danger",
           },
-        });
+        });}
       }
     }
   },
