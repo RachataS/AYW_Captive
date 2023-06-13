@@ -171,98 +171,101 @@ export default defineComponent({
       console.log(GoogleUser.given_name);
 
       const data = await ApiService.post("http://202.129.16.94:82/api/register",
-          {
-            username: GoogleUser.given_name,
-            email: GoogleUser.email,
-            password: password
-          }
-        ).catch((error) => {
-          errorData = error.response.data.error;
-          errorStatus = error.response.status;
-        });
-        console.log("data = " + JSON.stringify(data));
-
-      if(errorStatus === 200) {
-        try{
-        let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
         {
-          username:GoogleUser.given_name,
-          password: passwordEncoded,
-          dst: "",
-          popup: true,
-        },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          withCredentials: false,
+          username: GoogleUser.given_name,
+          email: GoogleUser.email,
+          password: password
         }
-      );
-      }catch (e) {
-        await router.push({ name: "400" });
-      }
+      ).catch((error) => {
+        errorData = error.response.data.error;
+        errorStatus = error.response.status;
+      });
+      console.log("data = " + JSON.stringify(data));
 
-        Swal.fire({
-          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok",
-          heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semobold btn-light-primary",
-          },
-        }).then(() => {
-              // Go to page after successfully login
-              router.push({ name: "dashboard" });});
-        window.location.reload();
-      } else {
-       if(errorStatus === 400){
-        try{
-        let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
-        {
-          username:GoogleUser.given_name,
-          password: passwordEncoded,
-          dst: "",
-          popup: true,
-        },
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          withCredentials: false,
-        }
-      );
-      }catch (e) {
-        await router.push({ name: "400" });
-      }
-
-        Swal.fire({
-          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok",
-          heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semobold btn-light-primary",
-          },
-        }).then(() => {
-              // Go to page after successfully login
-              router.push({ name: "dashboard" });
+      if (errorStatus === 200) {
+        try {
+          let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
+            {
+              username: GoogleUser.given_name,
+              password: passwordEncoded,
+              dst: "",
+              popup: true,
+            },
+            {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              withCredentials: false,
             }
-        
-        );
-        window.location.reload();
-       }
-        else{ Swal.fire({
-          html:`${errorStatus}<br>${errorData}`,
-          icon: "error",
+          );
+        } catch (e) {
+          await router.push({ name: "400" });
+        }
+
+        Swal.fire({
+          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
+          icon: "success",
           buttonsStyling: false,
-          confirmButtonText: "Try again!",
+          confirmButtonText: "Ok",
           heightAuto: false,
           customClass: {
-            confirmButton: "btn fw-semobold btn-light-danger",
+            confirmButton: "btn fw-semobold btn-light-primary",
           },
-        });}
+        }).then((result) => {
+          if (result.isConfirmed) {
+            //router.push({ name: "dashboard" });
+            window.location.reload();
+          }
+        });
+      } else {
+        if (errorStatus === 400) {
+          try {
+            let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
+              {
+                username: GoogleUser.given_name,
+                password: passwordEncoded,
+                dst: "",
+                popup: true,
+              },
+              {
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                withCredentials: false,
+              }
+            );
+          } catch (e) {
+            await router.push({ name: "400" });
+          }
+
+          Swal.fire({
+            html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-primary",
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              //router.push({ name: "dashboard" });
+              window.location.reload();
+            }
+          });
+        }
+        else {
+          Swal.fire({
+            html: `${errorStatus}<br>${errorData}`,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Try again!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+        }
       }
     }
   },
