@@ -249,6 +249,9 @@ import Widget5 from "@/components/dashboard-default-widgets/Widget5.vue";
 export default defineComponent({
   name: "kt-user-menu",
   components: {},
+  props:{
+    username:{type: String, required: false},
+  },
   data() {
     return {
       username: '',
