@@ -97,30 +97,27 @@
     </VForm>
     <!--end::Form-->
     <div>
-      <VForm class="form w-100" id="kt_login_signin_form" @submit="googleloginbutton">
-        <button type="submit" ref="submitButton" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+      <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+        <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
+        Continue with Google
+      </a>
+      <div class="button-container btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+        <GoogleLogin class="button-1 flex-center" style="opacity: 0.5; width: max-content;" :callback="callback">
+        </GoogleLogin>
+        <div class="button2">
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
           Continue with Google
-        </button>
-        <div class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-
-          <GoogleLogin :callback="callback">
-
-          </GoogleLogin>
         </div>
-        <!--begin::Google link-->
-        <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-          <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
-          Continue with Facebook
-        </a>
-        <!--end::Google link-->
-
-        <!--begin::Google link-->
-        <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
-          <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/apple-black.svg')" class="h-20px me-3" />
-          Continue with Apple
-        </a>
-      </VForm>
+      </div>
+      <!--begin::Google link-->
+      <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+        <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
+        Continue with Facebook
+      </a>
+      <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
+        <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/apple-black.svg')" class="h-20px me-3" />
+        Continue with Apple
+      </a>
     </div>
   </div>
   <!--end::Wrapper-->
@@ -141,7 +138,7 @@ import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
-import { decodeCredential, googleAuthCodeLogin } from 'vue3-google-login'
+import { decodeCredential, googleSdkLoaded } from 'vue3-google-login'
 
 const chapID = ref("");
 const chapChallenge = ref("");
@@ -155,7 +152,6 @@ export default defineComponent({
   },
   methods: {
     callback: async (response) => {
-      console.log(JSON.stringify(response));
       const protocol = window.location.protocol ?? "http:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
@@ -173,7 +169,6 @@ export default defineComponent({
       console.log(JSON.stringify(response.credential));
       const GoogleUser = decodeCredential(response.credential);
       console.log(GoogleUser);
-      console.log(GoogleUser.given_name);
 
       const data = await ApiService.post("http://202.129.16.94:82/api/register",
         {
@@ -278,10 +273,6 @@ export default defineComponent({
     const store = useAuthStore();
     const router = useRouter();
     const Vue3GoogleOauth = inject('Vue3GoogleOauth');
-
-    const googleloginbutton = () => {
-      console.log('test');
-    }
 
     const submitButton = ref<HTMLButtonElement | null>(null);
 
@@ -404,7 +395,6 @@ export default defineComponent({
       submitButton,
       getAssetPath,
       Vue3GoogleOauth,
-      googleloginbutton,
     }
   },
 
@@ -450,6 +440,18 @@ async function getchap() {
     //await router.push({ name: "400" });
   }
 }
-
-
 </script>
+<style>
+.button-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 6.5vh; /* Adjust the height as needed */
+}
+
+.button-1,
+.button-2 {
+  position: absolute;
+}
+</style>
