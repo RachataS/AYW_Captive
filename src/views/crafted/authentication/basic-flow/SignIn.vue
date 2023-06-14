@@ -91,7 +91,7 @@
         <!--end::Separator-->
 
         <!--begin::Google link-->
-        <a :href="getGoogleUrl()" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+        <a class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
           Continue with Google
         </a>
@@ -99,10 +99,6 @@
           <GoogleLogin  :callback="callback"/>
         </div>
         
-
-
-        <!--end::Google link-->
-
         <!--begin::Google link-->
         <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
@@ -137,7 +133,6 @@ import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
-import { getGoogleUrl } from "@/utils/getGoogleUrl.js";
 import { decodeCredential } from 'vue3-google-login'
 
 const chapID = ref("");
@@ -151,7 +146,6 @@ export default defineComponent({
     ErrorMessage,
   },
   methods: {
-    getGoogleUrl,
     callback: async (response) => {
       console.log(JSON.stringify(response));
       const protocol = window.location.protocol ?? "http:";
