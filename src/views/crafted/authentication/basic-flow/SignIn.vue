@@ -89,16 +89,25 @@
         <!--begin::Separator-->
         <div class="text-center text-muted text-uppercase fw-bold mb-5">or</div>
         <!--end::Separator-->
-
         <!--begin::Google link-->
-        <a class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+
+        <!--end::Google link-->
+      </div>
+      <!--end::Actions-->
+    </VForm>
+    <!--end::Form-->
+    <div>
+      <VForm class="form w-100" id="kt_login_signin_form" @submit="googleloginbutton">
+        <button type="submit" ref="submitButton" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
           Continue with Google
-        </a>
+        </button>
         <div class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-          <GoogleLogin  :callback="callback"/>
+
+          <GoogleLogin :callback="callback">
+
+          </GoogleLogin>
         </div>
-        
         <!--begin::Google link-->
         <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
@@ -111,14 +120,13 @@
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/apple-black.svg')" class="h-20px me-3" />
           Continue with Apple
         </a>
-        <!--end::Google link-->
-      </div>
-      <!--end::Actions-->
-    </VForm>
-    <!--end::Form-->
+      </VForm>
+    </div>
   </div>
   <!--end::Wrapper-->
 </template>
+
+
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
@@ -133,7 +141,7 @@ import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
-import { decodeCredential } from 'vue3-google-login'
+import { decodeCredential, googleAuthCodeLogin } from 'vue3-google-login'
 
 const chapID = ref("");
 const chapChallenge = ref("");
@@ -271,6 +279,9 @@ export default defineComponent({
     const router = useRouter();
     const Vue3GoogleOauth = inject('Vue3GoogleOauth');
 
+    const googleloginbutton = () => {
+      console.log('test');
+    }
 
     const submitButton = ref<HTMLButtonElement | null>(null);
 
@@ -393,6 +404,7 @@ export default defineComponent({
       submitButton,
       getAssetPath,
       Vue3GoogleOauth,
+      googleloginbutton,
     }
   },
 
