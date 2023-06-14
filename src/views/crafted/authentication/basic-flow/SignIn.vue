@@ -137,7 +137,7 @@ import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
-import { getGoogleUrl } from "@/utils/getGoogleUrl";
+import { getGoogleUrl } from "@/utils/getGoogleUrl.js";
 import { decodeCredential } from 'vue3-google-login'
 
 const chapID = ref("");
@@ -151,6 +151,7 @@ export default defineComponent({
     ErrorMessage,
   },
   methods: {
+    getGoogleUrl,
     callback: async (response) => {
       console.log(JSON.stringify(response));
       const protocol = window.location.protocol ?? "http:";
