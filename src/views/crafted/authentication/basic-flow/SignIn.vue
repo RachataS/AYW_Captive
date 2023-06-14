@@ -95,8 +95,10 @@
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
           Continue with Google
         </a>
-
-        <GoogleLogin :callback="callback" prompt auto-login />
+        <div class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+          <GoogleLogin  :callback="callback"/>
+        </div>
+        
 
 
         <!--end::Google link-->
@@ -149,8 +151,8 @@ export default defineComponent({
     ErrorMessage,
   },
   methods: {
-    getGoogleUrl,
     callback: async (response) => {
+      console.log(JSON.stringify(response));
       const protocol = window.location.protocol ?? "http:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
@@ -165,7 +167,7 @@ export default defineComponent({
       );
 
       console.log("login success");
-      console.log(response);
+      console.log(JSON.stringify(response.credential));
       const GoogleUser = decodeCredential(response.credential);
       console.log(GoogleUser);
       console.log(GoogleUser.given_name);
@@ -438,7 +440,7 @@ async function getchap() {
   }
   catch (e) {
     console.log("error", JSON.stringify(e));
-    //  await router.push({ name: "400" });
+    //await router.push({ name: "400" });
   }
 }
 
