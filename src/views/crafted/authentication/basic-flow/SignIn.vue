@@ -97,12 +97,12 @@
     </VForm>
     <!--end::Form-->
     <div>
-      <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+      <!-- <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
         Continue with Google
-      </a>
+      </a> -->
       <div class="button-container btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-        <GoogleLogin class="button-1 flex-center" style="opacity: 0.5; width: max-content;" :callback="callback">
+        <GoogleLogin class="button-1" style="opacity: 0; width: 200px;" :callback="callback">
         </GoogleLogin>
         <div class="button2">
           <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
