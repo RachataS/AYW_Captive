@@ -167,7 +167,7 @@ export default defineComponent({
       let errorData;
       let errorStatus = 200;
 
-      const data = await ApiService.vueInstance.axios.patch("http://202.129.16.94:82/api/changePassword",
+      try{const data = await ApiService.vueInstance.axios.patch("http://202.129.16.94:82/api/changePassword",
         {
           username : username.value,
           password : oldpassword.value,
@@ -176,7 +176,9 @@ export default defineComponent({
       ).catch((error) => {
         errorData = error.response.data.error;
         errorStatus = error.response.status;
-      });
+      });}catch(e){
+        console.log("error =",e);
+      }
 
       console.log(`username = ${username.value}\npassword = ${oldpassword.value}\nnew password = ${newpassword.value}`);
       console.log(`error status = ${errorStatus}\nerror data = ${errorData}`)

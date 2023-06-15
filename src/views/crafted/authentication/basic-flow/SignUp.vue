@@ -155,17 +155,19 @@ export default defineComponent({
       }
       password = result;
 
-      const data = await ApiService.post("http://202.129.16.94:82/api/register",
-        {
-          username: values.username,
-          email: values.email,
-          password: password
-        }
-      ).catch((error) => {
-        errorData = error.response.data.error;
-        errorStatus = error.response.status;
-      });
-      console.log("data = " + JSON.stringify(data));
+    try{const data = await ApiService.post("http://202.129.16.94:82/api/register",
+      {
+        username: values.username,
+        email: values.email,
+        password: password
+      }
+    ).catch((error) => {
+      errorData = error.response.data.error;
+      errorStatus = error.response.status;
+    });
+    console.log("data = " + JSON.stringify(data));}catch(e){
+      console.log("error = "+e);
+    }
 
       if (errorStatus === 200) {
         Swal.fire({

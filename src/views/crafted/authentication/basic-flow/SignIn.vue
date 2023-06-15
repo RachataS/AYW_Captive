@@ -110,6 +110,8 @@
         </div>
       </div>
       <!--begin::Google link-->
+      <v-facebook-login app-id="1326150037969654"></v-facebook-login>
+
       <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
         Continue with Facebook
@@ -139,6 +141,7 @@ import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
 import { decodeCredential, googleSdkLoaded } from 'vue3-google-login'
+import VFacebookLogin from 'vue-facebook-login-component-next'
 
 const chapID = ref("");
 const chapChallenge = ref("");
@@ -149,6 +152,7 @@ export default defineComponent({
     Field,
     VForm,
     ErrorMessage,
+    VFacebookLogin,
   },
   methods: {
     callback: async (response) => {
@@ -170,7 +174,7 @@ export default defineComponent({
       const GoogleUser = decodeCredential(response.credential);
       console.log(GoogleUser);
 
-      const data = await ApiService.post("http://202.129.16.94:82/api/register",
+try{      const data = await ApiService.post("http://202.129.16.94:82/api/register",
         {
           username: GoogleUser.given_name,
           email: GoogleUser.email,
@@ -180,7 +184,9 @@ export default defineComponent({
         errorData = error.response.data.error;
         errorStatus = error.response.status;
       });
-      console.log("data = " + JSON.stringify(data));
+      console.log("data = " + JSON.stringify(data));}catch(e){
+        console.log("you have an account");
+      }
 
       if (errorStatus === 200) {
         try {

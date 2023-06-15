@@ -114,7 +114,7 @@ export default defineComponent({
       let errorData;
       let errorStatus = 200;
 
-      const data = await ApiService.vueInstance.axios.patch("http://202.129.16.94:82/api/changeEmail",
+      try{const data = await ApiService.vueInstance.axios.patch("http://202.129.16.94:82/api/changeEmail",
         {
           username: username.value,
           password: password.value,
@@ -123,7 +123,9 @@ export default defineComponent({
       ).catch((error) => {
         errorData = error.response.data.error;
         errorStatus = error.response.status;
-      });
+      });}catch(e){
+        console.log("error =",e);
+      }
 
       if (errorStatus === 200) {
         Swal.fire({
