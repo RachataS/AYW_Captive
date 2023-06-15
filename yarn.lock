@@ -1620,6 +1620,11 @@ gopd@^1.0.1:
   dependencies:
     get-intrinsic "^1.1.3"
 
+graceful-fs@^4.1.15:
+  version "4.2.11"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
+  integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
+
 graceful-fs@^4.1.2:
   version "4.2.10"
   resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.10.tgz"
@@ -2901,6 +2906,11 @@ vue-eslint-parser@^9.0.0, vue-eslint-parser@^9.0.1:
     lodash "^4.17.21"
     semver "^7.3.6"
 
+vue-facebook-login-component-next@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/vue-facebook-login-component-next/-/vue-facebook-login-component-next-1.0.4.tgz#7283298b2a981a810fb7689e041ef16d481b28f4"
+  integrity sha512-yKVcBxpQ57pt8Vh/1asuJxzZ3Dx0yy2fWXZy/fTWkoJMBFI6sG4yhdfK5pSxFGExDoyOoiTsD4EKv3GG5XEcvw==
+
 vue-google-signin-button@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/vue-google-signin-button/-/vue-google-signin-button-1.0.4.tgz"
@@ -2927,6 +2937,13 @@ vue-router@^4.1.5:
   integrity sha512-DYWYwsG6xNPmLq/FmZn8Ip+qrhFEzA14EI12MsMgVxvHFDYvlr4NXpVF5hrRH1wVcDP8fGi5F4rxuJSl8/r+EQ==
   dependencies:
     "@vue/devtools-api" "^6.4.5"
+
+vue-social-auth@^1.4.9:
+  version "1.4.9"
+  resolved "https://registry.yarnpkg.com/vue-social-auth/-/vue-social-auth-1.4.9.tgz#dbeb324be0f44defe9f2e7b2c4b64a27c65b7e8f"
+  integrity sha512-LRyfLG09xzeqCAtCmy1PX1psJBhqqQt6MEhL5drp5TTdbmCpHGg5PPyWMNItNjBGLcUncxHA8P13vWE5k95hig==
+  dependencies:
+    graceful-fs "^4.1.15"
 
 vue-template-compiler@^2.7.14:
   version "2.7.14"
