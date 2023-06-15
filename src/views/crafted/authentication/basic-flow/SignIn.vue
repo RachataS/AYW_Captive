@@ -110,7 +110,7 @@
         </div>
       </div>
       <!--begin::Google link-->
-      <v-facebook-login app-id="1326150037969654"></v-facebook-login>
+      <!-- <v-facebook-login app-id="1326150037969654"></v-facebook-login> -->
 
       <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
@@ -141,7 +141,7 @@ import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
 import { decodeCredential, googleSdkLoaded } from 'vue3-google-login'
-import VFacebookLogin from 'vue-facebook-login-component-next'
+//import VFacebookLogin from 'vue-facebook-login-component-next'
 
 const chapID = ref("");
 const chapChallenge = ref("");
@@ -152,7 +152,7 @@ export default defineComponent({
     Field,
     VForm,
     ErrorMessage,
-    VFacebookLogin,
+    //VFacebookLogin,
   },
   methods: {
     callback: async (response) => {
