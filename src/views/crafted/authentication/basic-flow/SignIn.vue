@@ -152,7 +152,7 @@ export default defineComponent({
   },
   methods: {
     callback: async (response) => {
-      const protocol = window.location.protocol ?? "http:";
+      const protocol = window.location.protocol ?? "https:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
 
@@ -285,7 +285,7 @@ export default defineComponent({
     //Form submit function
     const onSubmitLogin = async (values: any) => {
       let errorRaw;
-      const protocol = window.location.protocol ?? "http:";
+      const protocol = window.location.protocol ?? "https:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
 
@@ -404,7 +404,7 @@ export default defineComponent({
 });
 
 async function getchap() {
-  const protocol = window.location.protocol ?? "http:";
+  const protocol = window.location.protocol ?? "https:";
   const host = window.location.hostname ?? "localhost";
   const port = window.location.port ?? "5173";
 

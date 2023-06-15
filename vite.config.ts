@@ -4,10 +4,11 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { Server } from "node:http";
 import path from "node:path";
+import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(),mkcert()],
   resolve: {
     alias: {
       "vue-i18n": "vue-i18n/dist/vue-i18n.cjs.js",
@@ -19,6 +20,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 3000,
   },
   server : {
+    https:true,
     proxy:{
       "^/apapi/.*":{
         target: "http://AYW-test.wifi",
@@ -29,6 +31,7 @@ export default defineConfig({
         rewrite:(path)=>path.replace(/^\/apapi/,""),
       },
     }
-  }
+  },
+  
 },
 );
