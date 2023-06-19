@@ -9,7 +9,7 @@ import mkcert from 'vite-plugin-mkcert'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(),
-    // mkcert()
+     //mkcert()
   ],
   resolve: {
     alias: {
@@ -22,7 +22,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 3000,
   },
   server : {
-   // https:true,
+    //https:true,
     proxy:{
       "^/apapi/.*":{
         target: "http://AYW-test.wifi",

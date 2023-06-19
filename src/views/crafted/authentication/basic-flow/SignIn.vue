@@ -97,10 +97,6 @@
     </VForm>
     <!--end::Form-->
     <div>
-      <!-- <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
-        <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/google-icon.svg')" class="h-20px me-3" />
-        Continue with Google
-      </a> -->
       <div class="button-container btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
         <GoogleLogin class="button-1" style="opacity: 0; width: 200px;" :callback="callback">
         </GoogleLogin>
@@ -109,13 +105,12 @@
           Continue with Google
         </div>
       </div>
-      <!--begin::Google link-->
-      <v-facebook-login app-id="1326150037969654"></v-facebook-login>
+      <!--begin::Google link--> 
 
-      <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
+      <button @click="facebookLogin()" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
         Continue with Facebook
-      </a>
+      </button>
       <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/apple-black.svg')" class="h-20px me-3" />
         Continue with Apple
@@ -140,11 +135,36 @@ import { processExpression } from "@vue/compiler-core";
 import * as cheerio from "cheerio";
 import router from "@/router";
 import * as md5 from "@/core/plugins/md5";
-import { decodeCredential, googleSdkLoaded } from 'vue3-google-login'
-import VFacebookLogin from 'vue-facebook-login-component-next'
+import { decodeCredential, googleSdkLoaded } from 'vue3-google-login';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import {getAuth, signInWithPopup, FacebookAuthProvider} from "firebase/auth";
 
 const chapID = ref("");
 const chapChallenge = ref("");
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDszsE-yuMe3tvzeTsT5NnMTCBSRUUh0dY",
+    authDomain: "moderncaptive.firebaseapp.com",
+    projectId: "moderncaptive",
+    storageBucket: "moderncaptive.appspot.com",
+    messagingSenderId: "660600923706",
+    appId: "1:660600923706:web:b4ed6b4de527a39fc53703",
+    measurementId: "G-0R31B2L7QZ"
+};
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+let provider = new FacebookAuthProvider();
+provider.addScope('email');
+
+const auth = getAuth();
+auth.languageCode = 'en';
+
+
+provider.setCustomParameters({
+  'display': 'popup'
+});
 
 export default defineComponent({
   name: "sign-in",
@@ -152,13 +172,39 @@ export default defineComponent({
     Field,
     VForm,
     ErrorMessage,
-    VFacebookLogin,
   },
   methods: {
+    facebookLogin(){
+      signInWithPopup(auth, provider)
+  .then((result) => {
+    // The signed-in user info.
+    const user = result.user;
+
+    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+    const credential = FacebookAuthProvider.credentialFromResult(result);
+    const accessToken = credential?.accessToken;
+
+    console.log(user.email,"\n",user.displayName);
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  })
+  .catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = FacebookAuthProvider.credentialFromError(error);
+
+    // ...
+  });
+    },
     callback: async (response) => {
       const protocol = window.location.protocol ?? "https:";
       const host = window.location.hostname ?? "localhost";
       const port = window.location.port ?? "5173";
+      let GoogleUser;
 
       const password = 'GoogleLoginCaptive';
 
@@ -171,7 +217,7 @@ export default defineComponent({
 
       console.log("login success");
       console.log(JSON.stringify(response.credential));
-      const GoogleUser = decodeCredential(response.credential);
+      GoogleUser = decodeCredential(response.credential);
       console.log(GoogleUser);
 
 //try{
@@ -211,7 +257,7 @@ export default defineComponent({
         }
 
         Swal.fire({
-          html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
+          html: `You have successfully logged in!<br>Your password is ${password}<br>--> Click OK to go to dashboard<--`,
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok",
@@ -247,7 +293,7 @@ export default defineComponent({
           }
 
           Swal.fire({
-            html: `You have successfully logged in!<br>Your password is ${password.value}<br>--> Click OK to go to dashboard<--`,
+            html: `You have successfully logged in!<br>Your password is ${password}<br>--> Click OK to go to dashboard<--`,
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Ok",
