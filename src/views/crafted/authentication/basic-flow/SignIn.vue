@@ -105,7 +105,7 @@
           Continue with Google
         </div>
       </div>
-      <!--begin::Google link--> 
+      <!--begin::Google link-->
 
       <button @click="facebookLogin()" class="btn btn-flex flex-center btn-light btn-lg w-100 mb-5">
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
@@ -119,8 +119,6 @@
   </div>
   <!--end::Wrapper-->
 </template>
-
-
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
@@ -138,19 +136,20 @@ import * as md5 from "@/core/plugins/md5";
 import { decodeCredential, googleSdkLoaded } from 'vue3-google-login';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {getAuth, signInWithPopup, FacebookAuthProvider} from "firebase/auth";
+import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import { connectDatabaseEmulator } from "firebase/database";
 
 const chapID = ref("");
 const chapChallenge = ref("");
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDszsE-yuMe3tvzeTsT5NnMTCBSRUUh0dY",
-    authDomain: "moderncaptive.firebaseapp.com",
-    projectId: "moderncaptive",
-    storageBucket: "moderncaptive.appspot.com",
-    messagingSenderId: "660600923706",
-    appId: "1:660600923706:web:b4ed6b4de527a39fc53703",
-    measurementId: "G-0R31B2L7QZ"
+  apiKey: "AIzaSyDszsE-yuMe3tvzeTsT5NnMTCBSRUUh0dY",
+  authDomain: "moderncaptive.firebaseapp.com",
+  projectId: "moderncaptive",
+  storageBucket: "moderncaptive.appspot.com",
+  messagingSenderId: "660600923706",
+  appId: "1:660600923706:web:b4ed6b4de527a39fc53703",
+  measurementId: "G-0R31B2L7QZ"
 };
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
@@ -174,31 +173,115 @@ export default defineComponent({
     ErrorMessage,
   },
   methods: {
-    facebookLogin(){
-      signInWithPopup(auth, provider)
-  .then((result) => {
-    // The signed-in user info.
-    const user = result.user;
+    async facebookLogin() {
+      try {
+        const result = await signInWithPopup(auth, provider);
 
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    const credential = FacebookAuthProvider.credentialFromResult(result);
-    const accessToken = credential?.accessToken;
+        // The signed-in user info.
+        const user = result.user;
 
-    console.log(user.email,"\n",user.displayName);
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = FacebookAuthProvider.credentialFromError(error);
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const accessToken = credential?.accessToken;
 
-    // ...
-  });
+        console.log(user.email, "\n", user.displayName);
+
+        const protocol = window.location.protocol ?? "https:";
+        const host = window.location.hostname ?? "localhost";
+        const port = window.location.port ?? "5173";
+
+        const password = 'FacebookLoginCaptive';
+
+        let errorData;
+        let errorStatus = 200;
+
+        const passwordEncoded = md5.hexMD5(
+          chapID.value + password + chapChallenge.value
+        );
+
+        const data = await ApiService.post("http://202.129.16.94:82/api/register", {
+          username: user.displayName,
+          email: user.email,
+          password: password,
+        }).catch((error) => {
+          errorData = error.response.data.error;
+          errorStatus = error.response.status;
+        });
+        console.log("data = " + JSON.stringify(data));
+
+        if (errorStatus === 200) {
+          try {
+            let html = await ApiService.vueInstance.axios.post(
+              `${protocol}//${host}:${port}/apapi/login`,
+              {
+                username: user.displayName,
+                password: passwordEncoded,
+                dst: "",
+                popup: true,
+              },
+              {
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                withCredentials: false,
+              }
+            );
+          } catch (e) {
+            await router.push({ name: "400" });
+          }
+
+          Swal.fire({
+            html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-primary",
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              //router.push({ name: "dashboard" });
+              window.location.reload();
+            }
+          });
+        } else {
+          if (errorStatus === 400) {
+            try {
+              let html = await ApiService.vueInstance.axios.post(
+                `${protocol}//${host}:${port}/apapi/login`,
+                {
+                  username: user.displayName,
+                  password: passwordEncoded,
+                  dst: "",
+                  popup: true,
+                },
+                {
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  withCredentials: false,
+                }
+              );
+            } catch (e) {
+              await router.push({ name: "400" });
+            }
+          } else {
+            Swal.fire({
+              html: `${errorStatus}<br>${errorData}`,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     callback: async (response) => {
       const protocol = window.location.protocol ?? "https:";
@@ -220,21 +303,21 @@ export default defineComponent({
       GoogleUser = decodeCredential(response.credential);
       console.log(GoogleUser);
 
-//try{
-       const data = await ApiService.post("http://202.129.16.94:82/api/register",
-        {
-          username: GoogleUser.given_name,
-          email: GoogleUser.email,
-          password: password
-        }
-      ).catch((error) => {
-        errorData = error.response.data.error;
-        errorStatus = error.response.status;
-      });
-      console.log("data = " + JSON.stringify(data));
-    // }catch(e){
-    //   console.log("you have an account");
-    // }
+      try {
+        const data = await ApiService.post("http://202.129.16.94:82/api/register",
+          {
+            username: GoogleUser.given_name,
+            email: GoogleUser.email,
+            password: password
+          }
+        ).catch((error) => {
+          errorData = error.response.data.error;
+          errorStatus = error.response.status;
+        });
+        console.log("data = " + JSON.stringify(data));
+      } catch (e) {
+        console.log("you have an account");
+      }
 
       if (errorStatus === 200) {
         try {
@@ -257,7 +340,7 @@ export default defineComponent({
         }
 
         Swal.fire({
-          html: `You have successfully logged in!<br>Your password is ${password}<br>--> Click OK to go to dashboard<--`,
+          html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
           icon: "success",
           buttonsStyling: false,
           confirmButtonText: "Ok",
@@ -293,7 +376,7 @@ export default defineComponent({
           }
 
           Swal.fire({
-            html: `You have successfully logged in!<br>Your password is ${password}<br>--> Click OK to go to dashboard<--`,
+            html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Ok",
@@ -501,7 +584,8 @@ async function getchap() {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 6.5vh; /* Adjust the height as needed */
+  height: 6.5vh;
+  /* Adjust the height as needed */
 }
 
 .button-1,
