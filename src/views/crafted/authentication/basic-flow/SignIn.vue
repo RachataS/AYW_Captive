@@ -179,12 +179,15 @@ export default defineComponent({
 
         // The signed-in user info.
         const user = result.user;
+        let username = user.displayName;
+        let reusername = username?.replace(" ","_");
+        console.log(reusername);
 
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential?.accessToken;
 
-        console.log(user.email, "\n", user.displayName);
+        console.log(user.email, "\n", reusername);
 
         const protocol = window.location.protocol ?? "https:";
         const host = window.location.hostname ?? "localhost";
@@ -199,22 +202,27 @@ export default defineComponent({
           chapID.value + password + chapChallenge.value
         );
 
-        const data = await ApiService.post("http://202.129.16.94:82/api/register", {
-          username: user.displayName,
-          email: user.email,
-          password: password,
-        }).catch((error) => {
-          errorData = error.response.data.error;
-          errorStatus = error.response.status;
-        });
-        console.log("data = " + JSON.stringify(data));
+        try {
+          const data = await ApiService.post("http://202.129.16.94:82/api/register", {
+            username: reusername,
+            email: user.email,
+            password: password,
+          }).catch((error) => {
+            errorData = error.response.data.error;
+            errorStatus = error.response.status;
+          });
+          console.log("data = " + JSON.stringify(data));
+          console.log(errorStatus);
+        } catch (e) {
+          console.log("You have an account");
+        }
 
         if (errorStatus === 200) {
           try {
             let html = await ApiService.vueInstance.axios.post(
               `${protocol}//${host}:${port}/apapi/login`,
               {
-                username: user.displayName,
+                username: reusername,
                 password: passwordEncoded,
                 dst: "",
                 popup: true,
@@ -226,7 +234,9 @@ export default defineComponent({
                 withCredentials: false,
               }
             );
+            console.log("success login");
           } catch (e) {
+            console.log("error login");
             await router.push({ name: "400" });
           }
 
@@ -241,17 +251,19 @@ export default defineComponent({
             },
           }).then((result) => {
             if (result.isConfirmed) {
-              //router.push({ name: "dashboard" });
-              window.location.reload();
+              router.push({ name: "dashboard" });
+              //window.location.reload();
             }
           });
         } else {
           if (errorStatus === 400) {
             try {
+              console.log(reusername);
+              console.log(password);
               let html = await ApiService.vueInstance.axios.post(
                 `${protocol}//${host}:${port}/apapi/login`,
                 {
-                  username: user.displayName,
+                  username: reusername,
                   password: passwordEncoded,
                   dst: "",
                   popup: true,
@@ -263,7 +275,9 @@ export default defineComponent({
                   withCredentials: false,
                 }
               );
+              console.log("login success");
             } catch (e) {
+              console.log("error login");
               await router.push({ name: "400" });
             }
           } else {
@@ -301,6 +315,7 @@ export default defineComponent({
       console.log("login success");
       console.log(JSON.stringify(response.credential));
       GoogleUser = decodeCredential(response.credential);
+      //const GoogleUsername = GoogleUser.given_name+"GoogleLogin";
       console.log(GoogleUser);
 
       try {
@@ -315,6 +330,7 @@ export default defineComponent({
           errorStatus = error.response.status;
         });
         console.log("data = " + JSON.stringify(data));
+        console.log(errorStatus);
       } catch (e) {
         console.log("you have an account");
       }
@@ -386,8 +402,8 @@ export default defineComponent({
             },
           }).then((result) => {
             if (result.isConfirmed) {
-              //router.push({ name: "dashboard" });
-              window.location.reload();
+            //router.push({ name: "dashboard" });
+            window.location.reload();
             }
           });
         }
