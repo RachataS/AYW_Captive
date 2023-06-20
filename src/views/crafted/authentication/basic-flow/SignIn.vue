@@ -112,8 +112,8 @@
         Continue with Facebook
       </button>
       <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
-        <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/apple-black.svg')" class="h-20px me-3" />
-        Continue with Apple
+        <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/Line.webp')" class="h-20px me-3" />
+        Continue with Line
       </a>
     </div>
   </div>
