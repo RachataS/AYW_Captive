@@ -180,7 +180,7 @@ export default defineComponent({
         // The signed-in user info.
         const user = result.user;
         let username = user.displayName;
-        let reusername = username?.replace(" ","_");
+        let reusername = username?.replace(" ", "_");
         console.log(reusername);
 
         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
@@ -196,7 +196,8 @@ export default defineComponent({
         const password = 'FacebookLoginCaptive';
 
         let errorData;
-        let errorStatus = 200;
+        let regErrorStatus, loginErrorStatus = 200;
+        let errorRaw;
 
         const passwordEncoded = md5.hexMD5(
           chapID.value + password + chapChallenge.value
@@ -209,15 +210,14 @@ export default defineComponent({
             password: password,
           }).catch((error) => {
             errorData = error.response.data.error;
-            errorStatus = error.response.status;
+            regErrorStatus = error.response.status;
           });
           console.log("data = " + JSON.stringify(data));
-          console.log(errorStatus);
+          console.log(regErrorStatus);
         } catch (e) {
-          console.log("You have an account");
+          console.log("You have an account!");
         }
-
-        if (errorStatus === 200) {
+        if (regErrorStatus !== 400) {
           try {
             let html = await ApiService.vueInstance.axios.post(
               `${protocol}//${host}:${port}/apapi/login`,
@@ -240,26 +240,40 @@ export default defineComponent({
             await router.push({ name: "400" });
           }
 
-          Swal.fire({
-            html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
-            icon: "success",
-            buttonsStyling: false,
-            confirmButtonText: "Ok",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semobold btn-light-primary",
-            },
-          }).then((result) => {
-            if (result.isConfirmed) {
-              router.push({ name: "dashboard" });
-              //window.location.reload();
-            }
-          });
+          if (loginErrorStatus === 200) {
+            Swal.fire({
+              html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-primary",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                //router.push({ name: "dashboard" });
+                window.location.reload();
+              }
+            });
+          } else {
+            Swal.fire({
+              html: `${loginErrorStatus}<br>${errorData}`,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+            getchap();
+          }
         } else {
-          if (errorStatus === 400) {
+          try {
+            
             try {
-              console.log(reusername);
-              console.log(password);
+
               let html = await ApiService.vueInstance.axios.post(
                 `${protocol}//${host}:${port}/apapi/login`,
                 {
@@ -275,14 +289,49 @@ export default defineComponent({
                   withCredentials: false,
                 }
               );
-              console.log("login success");
+              const $ = cheerio.load(html.data.toString());
+        errorRaw = $(`input[name = "error"]`).val() as string;
+        console.log("errorRaw = " + JSON.stringify(errorRaw));
+              console.log(errorRaw);
             } catch (e) {
               console.log("error login");
               await router.push({ name: "400" });
             }
-          } else {
+            console.log(loginErrorStatus);
+
+            if (errorRaw !== "invalid username or password") {
+              Swal.fire({
+                html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
+                icon: "success",
+                buttonsStyling: false,
+                confirmButtonText: "Ok",
+                heightAuto: false,
+                customClass: {
+                  confirmButton: "btn fw-semobold btn-light-primary",
+                },
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  //router.push({ name: "dashboard" });
+                  window.location.reload();
+                }
+              });
+            } else {
+              Swal.fire({
+                html: `${loginErrorStatus}<br>${errorData}`,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Try again!",
+                heightAuto: false,
+                customClass: {
+                  confirmButton: "btn fw-semobold btn-light-danger",
+                },
+              });
+              getchap();
+            }
+          }
+          catch (e) {
             Swal.fire({
-              html: `${errorStatus}<br>${errorData}`,
+              html: `${regErrorStatus}<br>${errorData}`,
               icon: "error",
               buttonsStyling: false,
               confirmButtonText: "Try again!",
@@ -306,7 +355,8 @@ export default defineComponent({
       const password = 'GoogleLoginCaptive';
 
       let errorData;
-      let errorStatus = 200;
+        let regErrorStatus, loginErrorStatus = 200;
+        let errorRaw;
 
       const passwordEncoded = md5.hexMD5(
         chapID.value + password + chapChallenge.value
@@ -319,61 +369,23 @@ export default defineComponent({
       console.log(GoogleUser);
 
       try {
-        const data = await ApiService.post("http://202.129.16.94:82/api/register",
-          {
+          const data = await ApiService.post("http://202.129.16.94:82/api/register", {
             username: GoogleUser.given_name,
             email: GoogleUser.email,
-            password: password
-          }
-        ).catch((error) => {
-          errorData = error.response.data.error;
-          errorStatus = error.response.status;
-        });
-        console.log("data = " + JSON.stringify(data));
-        console.log(errorStatus);
-      } catch (e) {
-        console.log("you have an account");
-      }
-
-      if (errorStatus === 200) {
-        try {
-          let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
-            {
-              username: GoogleUser.given_name,
-              password: passwordEncoded,
-              dst: "",
-              popup: true,
-            },
-            {
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              withCredentials: false,
-            }
-          );
+            password: password,
+          }).catch((error) => {
+            errorData = error.response.data.error;
+            regErrorStatus = error.response.status;
+          });
+          console.log("data = " + JSON.stringify(data));
+          console.log(regErrorStatus);
         } catch (e) {
-          await router.push({ name: "400" });
+          console.log("You have an account!");
         }
-
-        Swal.fire({
-          html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
-          icon: "success",
-          buttonsStyling: false,
-          confirmButtonText: "Ok",
-          heightAuto: false,
-          customClass: {
-            confirmButton: "btn fw-semobold btn-light-primary",
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            //router.push({ name: "dashboard" });
-            window.location.reload();
-          }
-        });
-      } else {
-        if (errorStatus === 400) {
+        if (regErrorStatus !== 400) {
           try {
-            let html = await ApiService.vueInstance.axios.post(`${protocol}//${host}:${port}/apapi/login`,
+            let html = await ApiService.vueInstance.axios.post(
+              `${protocol}//${host}:${port}/apapi/login`,
               {
                 username: GoogleUser.given_name,
                 password: passwordEncoded,
@@ -387,40 +399,116 @@ export default defineComponent({
                 withCredentials: false,
               }
             );
+            console.log("success login");
           } catch (e) {
+            console.log("error login");
             await router.push({ name: "400" });
           }
 
-          Swal.fire({
-            html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
-            icon: "success",
-            buttonsStyling: false,
-            confirmButtonText: "Ok",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semobold btn-light-primary",
-            },
-          }).then((result) => {
-            if (result.isConfirmed) {
-            //router.push({ name: "dashboard" });
-            window.location.reload();
+          if (loginErrorStatus === 200) {
+            Swal.fire({
+              html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-primary",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                //router.push({ name: "dashboard" });
+                window.location.reload();
+              }
+            });
+          } else {
+            Swal.fire({
+              html: `${loginErrorStatus}<br>${errorData}`,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+            getchap();
+          }
+        } else {
+          try {
+            
+            try {
+
+              let html = await ApiService.vueInstance.axios.post(
+                `${protocol}//${host}:${port}/apapi/login`,
+                {
+                  username: GoogleUser.given_name,
+                  password: passwordEncoded,
+                  dst: "",
+                  popup: true,
+                },
+                {
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  withCredentials: false,
+                }
+              );
+              const $ = cheerio.load(html.data.toString());
+        errorRaw = $(`input[name = "error"]`).val() as string;
+        console.log("errorRaw = " + JSON.stringify(errorRaw));
+              console.log(errorRaw);
+            } catch (e) {
+              console.log("error login");
+              await router.push({ name: "400" });
             }
-          });
+            console.log(loginErrorStatus);
+
+            if (errorRaw !== "invalid username or password") {
+              Swal.fire({
+                html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
+                icon: "success",
+                buttonsStyling: false,
+                confirmButtonText: "Ok",
+                heightAuto: false,
+                customClass: {
+                  confirmButton: "btn fw-semobold btn-light-primary",
+                },
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  //router.push({ name: "dashboard" });
+                  window.location.reload();
+                }
+              });
+            } else {
+              Swal.fire({
+                html: `${loginErrorStatus}<br>${errorData}`,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Try again!",
+                heightAuto: false,
+                customClass: {
+                  confirmButton: "btn fw-semobold btn-light-danger",
+                },
+              });
+              getchap();
+            }
+          }
+          catch (e) {
+            Swal.fire({
+              html: `${regErrorStatus}<br>${errorData}`,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
         }
-        else {
-          Swal.fire({
-            html: `${errorStatus}<br>${errorData}`,
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Try again!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semobold btn-light-danger",
-            },
-          });
-        }
-      }
-    }
+
+    },
   },
   setup() {
     const store = useAuthStore();
@@ -607,5 +695,4 @@ async function getchap() {
 .button-1,
 .button-2 {
   position: absolute;
-}
-</style>
+}</style>
