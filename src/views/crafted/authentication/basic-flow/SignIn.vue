@@ -111,10 +111,10 @@
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/facebook-4.svg')" class="h-20px me-3" />
         Continue with Facebook
       </button>
-      <a href="#" class="btn btn-flex flex-center btn-light btn-lg w-100">
+      <button @click="initializeLineLogin" class="btn btn-flex flex-center btn-light btn-lg w-100">
         <img alt="Logo" :src="getAssetPath('media/svg/brand-logos/Line.webp')" class="h-20px me-3" />
         Continue with Line
-      </a>
+      </button>
     </div>
   </div>
   <!--end::Wrapper-->
@@ -138,6 +138,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import { connectDatabaseEmulator } from "firebase/database";
+import liff from "@line/liff";
 
 const chapID = ref("");
 const chapChallenge = ref("");
@@ -173,6 +174,21 @@ export default defineComponent({
     ErrorMessage,
   },
   methods: {
+    async initializeLineLogin() {
+      try {
+        await liff.init({ liffId: '1653761629-AMDmoZ6p' });
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          // User is already logged in
+          const userProfile = await liff.getProfile();
+          console.log(userProfile);
+          // Do something with the user profile
+        }
+      } catch (error) {
+        console.error('LIFF initialization failed', error);
+      }
+    },
     async facebookLogin() {
       try {
         const result = await signInWithPopup(auth, provider);
