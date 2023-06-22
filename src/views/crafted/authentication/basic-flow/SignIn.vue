@@ -161,6 +161,7 @@ provider.addScope('email');
 const auth = getAuth();
 auth.languageCode = 'en';
 
+let userProfile;
 
 provider.setCustomParameters({
   'display': 'popup'
@@ -176,14 +177,12 @@ export default defineComponent({
   methods: {
     async initializeLineLogin() {
       try {
-        await liff.init({ liffId: '1653761629-AMDmoZ6p' });
+        await liff.init({ liffId: '1661491631-qNk18l7b' });
         if (!liff.isLoggedIn()) {
           liff.login();
         } else {
-          // User is already logged in
-          const userProfile = await liff.getProfile();
+          userProfile = await liff.getProfile();
           console.log(userProfile);
-          // Do something with the user profile
         }
       } catch (error) {
         console.error('LIFF initialization failed', error);
@@ -205,9 +204,9 @@ export default defineComponent({
 
         console.log(user.email, "\n", reusername);
 
-        socialLogin(reusername,user.email);
+        socialLogin(reusername, user.email);
 
-        
+
       } catch (error) {
         console.log(error);
       }
@@ -224,7 +223,7 @@ export default defineComponent({
       //const GoogleUsername = GoogleUser.given_name+"GoogleLogin";
       console.log(GoogleUser);
 
-      socialLogin(GoogleUser.given_name,GoogleUser.email);
+      socialLogin(GoogleUser.given_name, GoogleUser.email);
 
     },
   },
@@ -399,161 +398,163 @@ async function getchap() {
     //await router.push({ name: "400" });
   }
 }
-async function socialLogin(username,email) {
+async function socialLogin(username, email) {
 
-      const protocol = window.location.protocol ?? "https:";
-      const host = window.location.hostname ?? "localhost";
-      const port = window.location.port ?? "5173";
-  
+  const protocol = window.location.protocol ?? "https:";
+  const host = window.location.hostname ?? "localhost";
+  const port = window.location.port ?? "5173";
+
   const password = 'SocialLoginCaptive';
 
-let errorData;
+  let errorData;
   let regErrorStatus, loginErrorStatus = 200;
   let errorRaw;
 
-const passwordEncoded = md5.hexMD5(
-  chapID.value + password + chapChallenge.value
-);
+  const passwordEncoded = md5.hexMD5(
+    chapID.value + password + chapChallenge.value
+  );
   try {
-          const data = await ApiService.post("http://202.129.16.94:82/api/register", {
-            username: username,
-            email: email,
-            password: password,
-          }).catch((error) => {
-            errorData = error.response.data.error;
-            regErrorStatus = error.response.status;
-          });
-          console.log("data = " + JSON.stringify(data));
-          console.log(regErrorStatus);
-        } catch (e) {
-          console.log("You have an account!");
+    const data = await ApiService.post("http://202.129.16.94:82/api/register", {
+      username: username,
+      email: email,
+      password: password,
+    }).catch((error) => {
+      errorData = error.response.data.error;
+      regErrorStatus = error.response.status;
+    });
+    console.log("data = " + JSON.stringify(data));
+    console.log(regErrorStatus);
+  } catch (e) {
+    console.log("You have an account!");
+  }
+  if (regErrorStatus !== 400) {
+    try {
+      let html = await ApiService.vueInstance.axios.post(
+        `${protocol}//${host}:${port}/apapi/login`,
+        {
+          username: username,
+          password: passwordEncoded,
+          dst: "",
+          popup: true,
+        },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          withCredentials: false,
         }
-        if (regErrorStatus !== 400) {
-          try {
-            let html = await ApiService.vueInstance.axios.post(
-              `${protocol}//${host}:${port}/apapi/login`,
-              {
-                username: username,
-                password: passwordEncoded,
-                dst: "",
-                popup: true,
-              },
-              {
-                headers: {
-                  "Content-Type": "application/x-www-form-urlencoded",
-                },
-                withCredentials: false,
-              }
-            );
-            console.log("success login");
-          } catch (e) {
-            console.log("error login");
-            await router.push({ name: "400" });
-          }
+      );
+      console.log("success login");
+    } catch (e) {
+      console.log("error login");
+      await router.push({ name: "400" });
+    }
 
-          if (loginErrorStatus === 200) {
-            Swal.fire({
-              html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
-              icon: "success",
-              buttonsStyling: false,
-              confirmButtonText: "Ok",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-primary",
-              },
-            }).then((result) => {
-              if (result.isConfirmed) {
-                //router.push({ name: "dashboard" });
-                window.location.reload();
-              }
-            });
-          } else {
-            Swal.fire({
-              html: `${loginErrorStatus}<br>${errorData}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-            getchap();
-          }
-        } else {
-          try {
-            
-            try {
+    if (loginErrorStatus === 200) {
+      Swal.fire({
+        html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
+        icon: "success",
+        buttonsStyling: false,
+        confirmButtonText: "Ok",
+        heightAuto: false,
+        customClass: {
+          confirmButton: "btn fw-semobold btn-light-primary",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          //router.push({ name: "dashboard" });
+          window.location.reload();
+        }
+      });
+    } else {
+      Swal.fire({
+        html: `${loginErrorStatus}<br>${errorData}`,
+        icon: "error",
+        buttonsStyling: false,
+        confirmButtonText: "Try again!",
+        heightAuto: false,
+        customClass: {
+          confirmButton: "btn fw-semobold btn-light-danger",
+        },
+      });
+      getchap();
+    }
+  } else {
+    try {
 
-              let html = await ApiService.vueInstance.axios.post(
-                `${protocol}//${host}:${port}/apapi/login`,
-                {
-                  username: username,
-                  password: passwordEncoded,
-                  dst: "",
-                  popup: true,
-                },
-                {
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                  },
-                  withCredentials: false,
-                }
-              );
-              const $ = cheerio.load(html.data.toString());
+      try {
+
+        let html = await ApiService.vueInstance.axios.post(
+          `${protocol}//${host}:${port}/apapi/login`,
+          {
+            username: username,
+            password: passwordEncoded,
+            dst: "",
+            popup: true,
+          },
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            withCredentials: false,
+          }
+        );
+        const $ = cheerio.load(html.data.toString());
         errorRaw = $(`input[name = "error"]`).val() as string;
         console.log("errorRaw = " + JSON.stringify(errorRaw));
-              console.log(errorRaw);
-            } catch (e) {
-              console.log("error login");
-              await router.push({ name: "400" });
-            }
-            console.log(loginErrorStatus);
+        console.log(errorRaw);
+      } catch (e) {
+        console.log("error login");
+        await router.push({ name: "400" });
+      }
+      console.log(loginErrorStatus);
 
-            if (errorRaw !== "invalid username or password") {
-              Swal.fire({
-                html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Ok",
-                heightAuto: false,
-                customClass: {
-                  confirmButton: "btn fw-semobold btn-light-primary",
-                },
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  //router.push({ name: "dashboard" });
-                  window.location.reload();
-                }
-              });
-            } else {
-              Swal.fire({
-                html: `${loginErrorStatus}<br>${errorData}`,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Try again!",
-                heightAuto: false,
-                customClass: {
-                  confirmButton: "btn fw-semobold btn-light-danger",
-                },
-              });
-              getchap();
-            }
+      if (errorRaw !== "invalid username or password") {
+        Swal.fire({
+          html: `You have successfully logged in!<br>--> Click OK to go to dashboard<--`,
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-primary",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            //router.push({ name: "dashboard" });
+            window.location.reload();
           }
-          catch (e) {
-            Swal.fire({
-              html: `${regErrorStatus}<br>${errorData}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
-        }
+        });
+      } else {
+        Swal.fire({
+          html: `${loginErrorStatus}<br>${errorData}`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Try again!",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-danger",
+          },
+        });
+        getchap();
+      }
+    }
+    catch (e) {
+      Swal.fire({
+        html: `${regErrorStatus}<br>${errorData}`,
+        icon: "error",
+        buttonsStyling: false,
+        confirmButtonText: "Try again!",
+        heightAuto: false,
+        customClass: {
+          confirmButton: "btn fw-semobold btn-light-danger",
+        },
+      });
+    }
+  }
+
 }
+export { userProfile }
 </script>
 <style>
 .button-container {
@@ -568,4 +569,5 @@ const passwordEncoded = md5.hexMD5(
 .button-1,
 .button-2 {
   position: absolute;
-}</style>
+}
+</style>
