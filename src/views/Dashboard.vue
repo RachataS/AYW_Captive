@@ -4,18 +4,11 @@
     <div class="col-xxl-3"></div>
     <!--begin::Col-->
     <div class="col-xxl-6">
-      <Widget5 className="h-md-100" 
-      :username = "username"
-      :ip = "ip"
-      :bytein = "bytein"
-      :byteout="byteout"
-      :uptime = "uptime"
-      />
+      <Widget5 className="h-md-100" :username="username" :ip="ip" :bytein="bytein" :byteout="byteout" :uptime="uptime" />
     </div>
     <!--end::Col-->
     <div class="col-xxl-3"></div>
   </div>
-  
 </template>
 
 <script lang="ts">
@@ -34,6 +27,8 @@ import Widget10 from "@/components/dashboard-default-widgets/Widget10.vue";
 import MixedWidget5 from "@/components/widgets/mixed/Widget5.vue";
 import ApiService from "@/core/services/ApiService";
 import * as cheerio from "cheerio";
+import liff from "@line/liff";
+import { userProfile } from "./crafted/authentication/basic-flow/SignIn.vue";
 
 export default defineComponent({
   name: "main-dashboard",
@@ -62,7 +57,7 @@ export default defineComponent({
   mounted() {
     this.getData();
     this.startAutoRefresh();
-    
+    console.log("line info =",userProfile);
   },
   methods: {
     getUptimeMin(uptime) {
@@ -74,13 +69,6 @@ export default defineComponent({
       setInterval(() => {
         this.getData();
       }, 60000);
-      //   for (let i = 0;i<62;i++){
-      //   await new Promise(resolve => setTimeout(resolve, 1000));
-      //     if (i === 61){
-      //       i = 0;
-      //     }
-      //   console.log(i);
-      // };
     },
     async getData() {
       const protocol = window.location.protocol ?? "http:";
