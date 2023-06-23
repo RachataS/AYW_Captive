@@ -103,7 +103,7 @@ async function initializeLineLogin() {
          //const LineUsername  = JSON.stringify(userProfile);
           console.log(`profile = ${userProfile.displayName}\nemail = ${email}`)
         } else{
-          console.log("not login");
+          console.log("not login line");
         }
       } catch (error) {
         console.error('LIFF initialization failed', error);
