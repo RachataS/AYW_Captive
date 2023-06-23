@@ -167,6 +167,8 @@ provider.setCustomParameters({
   'display': 'popup'
 });
 
+type UnPromise<T> = T extends Promise<infer X> ? X : T;
+
 export default defineComponent({
   name: "sign-in",
   components: {
@@ -179,10 +181,12 @@ export default defineComponent({
       try {
         await liff.init({ liffId: '1661491631-qNk18l7b' });
         if (!liff.isLoggedIn()) {
+          console.log(1);
           liff.login();
         } else {
-          userProfile = await liff.getProfile();
-          console.log(userProfile);
+          console.log(2);
+          liff.logout();
+          liff.login();
         }
       } catch (error) {
         console.error('LIFF initialization failed', error);
@@ -552,9 +556,8 @@ async function socialLogin(username, email) {
       });
     }
   }
-
 }
-export { userProfile }
+export { socialLogin }
 </script>
 <style>
 .button-container {

@@ -28,7 +28,7 @@ import MixedWidget5 from "@/components/widgets/mixed/Widget5.vue";
 import ApiService from "@/core/services/ApiService";
 import * as cheerio from "cheerio";
 import liff from "@line/liff";
-import { userProfile } from "./crafted/authentication/basic-flow/SignIn.vue";
+import { socialLogin } from "./crafted/authentication/basic-flow/SignIn.vue";
 
 export default defineComponent({
   name: "main-dashboard",
@@ -57,7 +57,7 @@ export default defineComponent({
   mounted() {
     this.getData();
     this.startAutoRefresh();
-    console.log("line info =",userProfile);
+    initializeLineLogin();
   },
   methods: {
     getUptimeMin(uptime) {
@@ -91,5 +91,22 @@ export default defineComponent({
       getAssetPath,
     };
   },
-});
+}
+);
+async function initializeLineLogin() {
+  type UnPromise<T> = T extends Promise<infer X> ? X : T;
+      try {
+        await liff.init({ liffId: '1661491631-qNk18l7b' });
+        if (liff.isLoggedIn()) {
+          const userProfile: UnPromise<ReturnType<typeof liff.getProfile>> = await liff.getProfile();
+          const email = liff.getDecodedIDToken()?.email;
+         //const LineUsername  = JSON.stringify(userProfile);
+          console.log(`profile = ${userProfile.displayName}\nemail = ${email}`)
+        } else{
+          console.log("not login");
+        }
+      } catch (error) {
+        console.error('LIFF initialization failed', error);
+      }
+    }
 </script>
